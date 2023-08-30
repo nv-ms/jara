@@ -1,18 +1,19 @@
 const express = require('express');
 const app = express();
+const path = require('path'); // Move this line up
 const dotenv = require('dotenv');
 const cors = require('cors');
 dotenv.config();
 
 app.use(cors());
-
 app.use(express.json());
- // routes
-app.set('view-engine', 'ejs'); 
 
-app.get('/', (req,res) => {
-    res.render('login.ejs')
-})
+
+app.get("/login", (req, res) => {
+    const filePath = path.join(__dirname, "../test/index.html");
+    res.sendFile(filePath);
+});
+
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
 
@@ -30,5 +31,5 @@ app.use('/api/reviews', reviewsRoutes);
 
 const port = process.env.PORT;
 app.listen(port, () => {
-    console.log(`server is listening on: http://localhost:${port}`);
+    console.log(`Server is listening on: http://localhost:${port}`);
 });
