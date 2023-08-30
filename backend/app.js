@@ -13,6 +13,10 @@ app.get("/login", (req, res) => {
     const filePath = path.join(__dirname, "../test/index.html");
     res.sendFile(filePath);
 });
+app.get("/home",(req,res)=>{
+    const filePath = path.join(__dirname, "../test/home.html");
+    res.sendFile(filePath);
+})
 
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);

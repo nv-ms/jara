@@ -32,12 +32,12 @@ const userController = {
 
             const user = await userModel.findOne({where:{email}});
             if(!user){
-                return res.status(401).json({error:'No user with such email exists in our system'});
+                return res.status(404).json({error:'No user with such email exists in our system'});
             }
 
             const passwordMatch = await bcrypt.compare(password, user.password_hash);
             if(!passwordMatch){
-                return res.status(401).json({error:'Wrong Password, please try again'});
+                return res.status(401).json({error:"Wrong Password"});
             }
             
             const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
