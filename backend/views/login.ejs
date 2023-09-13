@@ -1,19 +1,33 @@
-<h1>Login</h1>
-<div>
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" required>
-</div>    
-<div>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-</div>
-<button class="login">Login</button>
-<a href="/register">Don't have an account? Register</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm" method="post">
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Login</button>
+        <a href="/register">Don't have an account? Register</a>
+    </form>
 
 <script>
-    document.querySelector('.login').addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    console.log()
 
     try {
         const response = await fetch('api/users/login', {
@@ -24,20 +38,16 @@
             body: JSON.stringify({ email, password })
         });
 
-        if (!response.ok) {
-            throw new Error('Login failed');
-        }
-
-        const data = await response.json();
-        const authToken = data.authToken; // Extract authToken from the response data
-
-        localStorage.setItem('token', authToken);
-        console.log('Login successful');
-        console.log(authToken);
-
-        // Redirect to the home page
+        if (response.ok) {
+        const token = await response.json();
         window.location.href = '/home';
+        } else {
+            const errorData = await response.json();
+            console.error('Login failed:', errorData.error);
+        }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('An error occurred:', error);
     }
 });
+
+</script>

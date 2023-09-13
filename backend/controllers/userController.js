@@ -47,7 +47,6 @@ const userController = {
     
             res.status(201).redirect('/login');
         } catch (error) {
-            // Handle errors
             console.error(error);
             res.status(500).render('register', { error: 'An error occurred' });
         }
@@ -67,7 +66,7 @@ const userController = {
             }
 
             const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY); 
-            //res.cookie('authToken', token);
+            res.cookie('authtoken', token);
 
             res.status(200).json({authToken:token});
         } catch (error) {
