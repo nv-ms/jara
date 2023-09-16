@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jara</title>
+    <link rel="stylesheet" href="../public/styles/style.css">
+</head>
+    <body>
+        <h1>Register</h1>
+        <form id="registerForm" method="post">
+            <div class="outputDiv">Welcome, please register to continue</div>
+            <div id="sucessDiv"></div>
+            <div id="failDiv"></div>
+
+            <div>
+                <label for="user_id">ID</label>
+                <input type="text" name="user_id" id="user_id" required>
+            </div>
+
+            <div>
+                <label for="username">username</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+
+            <div>
+                <label for="first_name">first_name</label>
+                <input type="text" name="first_name" id="first_name" required>
+            </div>
+
+            <div>
+                <label for="last_name">last_name</label>
+                <input type="text" name="last_name" id="last_name" required>
+            </div>
+
+            <div>
+                <label for="email">email</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div>
+                <label for="phone_number">Phone</label>
+                <input type="number" name="phone_number" id="phone_number" required>
+            </div>
+
+            <div>
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <div>
+                <label for="ConfPass">confirm password</label>
+                <input type="password" name="ConfPass" id="ConfPass" required>
+            </div>
+
+            <button>Register</button>
+            <a href="/login">Already have an account, Login</a>
+        </form>
+    </body>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(event){
+            event.preventDefault();
+    
+            const successDiv = document.getElementById('successDiv');
+            const failDiv = document.getElementById('failDiv');
+
+            const formData = new FormData(this);
+
+            const user_id = formData.get('user_id');
+            const username = formData.get('username');
+            const first_name = formData.get('first_name');
+            const last_name = formData.get('last_name');
+            const phone_number = formData.get('phone_number');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const confirmPass = formData.get('ConfPass');
+    
+            if (password !== confirmPass) {
+                failDiv.innerText = 'Passwords do not match. Please confirm your password.';
+                return;
+            }else{
+                try {
+                    const response = await fetch('/api/users/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user_id, username, first_name, last_name, phone_number, email, password })
+                    });
+    
+                    if (response.ok) {
+                        const token = await response.json();
+                        //successDiv.innerHTML = 'Registration successful';
+                        //window.location.href = '/login';
+                    } else {
+                        const errorData = await response.json();
+                        failDiv.innerHTML = errorData.error;
+                    }
+                } catch (error) {
+                   console.log("An error ocurred: ", error);
+                }
+            }
+        });
+    </script>
+</html>

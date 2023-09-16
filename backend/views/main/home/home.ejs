@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jara</title>
+</head>
+<body>
+    <nav>
+        <a href="#" id="logoutLink">Logout</a><br>
+        <a href="/">Home</a><br>
+        <a href="/profile">My Profile</a>
+        <a href="/">Post your Job</a>
+    </nav>
+    <h1>Welcome to this page</h1>
+
+    <div class="job-container">
+        <h2>Job Listings</h2>
+        <div id="jobList"></div>
+    </div>
+
+    <footer>
+        2023 Nams
+    </footer>
+
+    <script>
+        async function fetchAndDisplayJobs() {
+            try {
+                const response = await fetch('/api/jobs/fetchJobs')
+                if (response.ok) {
+                    const responseData = await response.json();
+                    const jobs = responseData.job;
+                    const jobListContainer = document.getElementById('jobList');
+
+                    // Create a job div for each job and populate it
+                    jobs.forEach((job) => {
+                        const jobDiv = document.createElement('div');
+                        jobDiv.classList.add('job');
+
+                        const categoryHeader = document.createElement('h2');
+                        categoryHeader.textContent = job.category_id
+
+                        const titleHeader = document.createElement('h3');
+                        titleHeader.textContent = job.job_title;
+
+                        const descriptionPara = document.createElement('p');
+                        descriptionPara.textContent = job.job_description;
+
+                        const locationPara = document.createElement('p');
+                        locationPara.textContent = `Location: ${job.job_location}`;
+
+                        const postedDatePara = document.createElement('p');
+                        postedDatePara.textContent = `Posted Date: ${job.posted_date}`;
+
+                        jobDiv.appendChild(categoryHeader);
+                        jobDiv.appendChild(titleHeader);
+                        jobDiv.appendChild(descriptionPara);
+                        jobDiv.appendChild(locationPara);
+                        jobDiv.appendChild(postedDatePara);
+
+                        jobListContainer.appendChild(jobDiv);
+                    });
+                } else {
+                    console.error('Failed to fetch job data');
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        function logoutUser() {
+            document.getElementById('logoutLink').addEventListener('click', async (event) => {
+                event.preventDefault();
+                try {
+                    const response = await fetch('api/users/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        console.error('Please try again');
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+            });
+        }
+
+        // Call the fetchAndDisplayJobs and logoutUser functions when the document is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayJobs();
+            logoutUser();
+        });
+    </script>
+</body>
+</html>

@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Jara - Login</title>
+    <link rel="stylesheet" href="../public/styles/style.css">
 </head>
 <body>
     <h1>Login</h1>
     <form id="loginForm" method="post">
+        <div class="outputDiv">Welcome Back, please login</div>
+        <div id="successDiv"></div>
+        <div id="failDiv"></div>
+
+
         <div>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" required>
@@ -27,7 +33,13 @@
     const formData = new FormData(this);
     const email = formData.get('email');
     const password = formData.get('password');
-    console.log()
+    //const outputScreen = document.getElementById('loginOutput');
+
+    //for outputting the server responses
+    const successDiv = document.getElementById('successDiv');
+    const failDiv = document.getElementById('failDiv');
+
+    //console.log()
 
     try {
         const response = await fetch('api/users/login', {
@@ -39,15 +51,19 @@
         });
 
         if (response.ok) {
-        const token = await response.json();
-        window.location.href = '/home';
+            successDiv.innerHTML='Welcome back';
+            const token = await response.json();
+            window.location.href = '/home';
+            window.history.replaceState({}, document.title, "/home");
         } else {
+            //implement a loading system in both ways, incase of success or fail
             const errorData = await response.json();
-            console.error('Login failed:', errorData.error);
+            //serve the client with an error message, exact error message
+            failDiv.innerHTML = errorData.error;
+            //console.error('Login failed:', errorData.error);
         }
     } catch (error) {
         console.error('An error occurred:', error);
     }
 });
-
 </script>

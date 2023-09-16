@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const userController = {
     registerUser: async (req, res) => {
         try {
-            const { user_id, username, first_name, last_name, email, phone_number, password } = req.body;
+            const { user_id, username, first_name, last_name, phone_number, email, password } = req.body;
             const existingUser = await userModel.findOne({
                 where: {
                     [Sequelize.Op.or]: [
@@ -30,7 +30,6 @@ const userController = {
                 }
             };
             
-            
             const hashedPassword = await bcrypt.hash(password, 10);
     
             const newUser = await userModel.create({
@@ -44,11 +43,12 @@ const userController = {
             });
     
             const token = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY);
-    
-            res.status(201).redirect('/login');
+            res.cookie('authtoken', token); 
+            res.cookie('userId', newUser.id);
+            res.status(201).json({ authToken: token });
         } catch (error) {
             console.error(error);
-            res.status(500).render('register', { error: 'An error occurred' });
+            res.status(500).json({ error: 'An error occurred' });
         }
     },  
     loginUser: async (req, res) => {
@@ -57,7 +57,7 @@ const userController = {
 
             const user = await userModel.findOne({ where: { email } });
             if (!user) {
-                return res.status(404).json({ error: 'No user with such email exists in our system' });
+                return res.status(404).json({ error: 'No user with such email exists in our system'});
             }
 
             const passwordMatch = await bcrypt.compare(password, user.password_hash);
@@ -66,16 +66,26 @@ const userController = {
             }
 
             const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY); 
+            res.cookie('user_Id', user.user_id);
             res.cookie('authtoken', token);
+            res.status(200).json({ authToken: token });
 
-            res.status(200).json({authToken:token});
         } catch (error) {
             // Handle errors
             res.status(500).json({ error: 'An error occurred' });
             console.log(error);
         }
     },
-
+    logoutUser: async (req, res) => {
+        try {
+            res.clearCookie('authtoken');
+            res.clearCookie('userId');
+            res.status(200).json({message:'Logged out sucessfully'});
+        } catch (error) {
+            console.error("an error ocurred:", error);
+            res.status(500).json({error:'An error ocurred', error});
+        }
+    },
     getUserProfile: async (req, res) => {
         try {
             const userId = req.params.userId;
@@ -87,7 +97,6 @@ const userController = {
 
             res.status(200).json(user);
         } catch (error) {
-            // Handle errors
             res.status(500).json({ error: 'An error occurred' });
             console.log(error);
         }

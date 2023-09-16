@@ -3,6 +3,7 @@ const Category = require('../models/categories');
 const User = require('../models/users');
 const deletedJob = require('../models/deletedJobs');
 const { v4: uuidv4 } = require('uuid');
+const { json } = require('sequelize');
 
 const jobController = {
     createJob: async (req, res) => {
@@ -79,7 +80,18 @@ const jobController = {
             console.error(error);
             res.status(500).json({ error: 'An error occurred while deleting the job',error });
         }
-    },    
+    },
+    getjobList:async(req, res)=>{
+        try {
+            const job = await Job.findAll();
+            if(!job){
+                res.status(404).json({error:"No jobs found"});
+            }
+            res.status(200).json({job});
+        } catch (error) {
+            res.status(500).json({error:"An error ocurred while fetching jobs", error});
+        }
+    },   
     getJobDetails:async(req, res)=>{
         try {
             const job_id = req.params.job_id;

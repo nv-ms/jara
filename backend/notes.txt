@@ -1,0 +1,14 @@
+>>Generation of id's, automatic
+
+>displaying jobs on the frontend, index.ejs file
+>>Logging in, display user's name, and profile
+>>In the index page, there should be a list of jobs, to start width
+>>Generating job lists & filtering them.
+
+<<Optional, if one may decide not to login, and just view the jobs, but they should be first obscured off the details, through some
+    several filtrations , only the job title and location to be shown, then if they want more details, they then should login, especialy when submitting their appplication
+
+>work on a better jwt generation, ensuring better security
+
+
+>
