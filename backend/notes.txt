@@ -11,4 +11,9 @@
 >work on a better jwt generation, ensuring better security
 
 
+-----job creation-----
+One needs to be verified well, and all that, to get their details
+
+
+
 >

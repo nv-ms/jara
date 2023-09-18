@@ -4,27 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara</title>
+    <link rel="stylesheet" href="../public/styles/style.css">
 </head>
 <body>
-    <nav>
-        <a href="#" id="logoutLink">Logout</a><br>
-        <a href="/">Home</a><br>
-        <a href="/profile">My Profile</a>
-        <a href="/">Post your Job</a>
-    </nav>
-    <h1>Welcome to this page</h1>
+    <header class="headNav">
+        <h1 style="font-size: 3vw; margin-left: 5px;float: left;z-index: 3;">Jara</h1>
+        <nav class="navbar">
+            <div class="links">
+                <a href="#" id="logoutLink">Logout</a>
+                <a href="/">Home</a>
+                <a href="/profile">My Profile</a>
+                <a href="" onclick="toggleJobPanel(); return false;">Post a Job</a>
+            </div>
+            <div class="searchBar">
+                <input type="search" name="searchbar" id="searchbar" placeholder="Search for a job"><br>
+                <button type="button">Search</button>
+            </div>
+        </nav>
+    </header>
+    <main class="content">
+        
+        <h1 class="introh1">Welcome to Jara, your dream job is just a click away</h1>
 
-    <div class="job-container">
-        <h2>Job Listings</h2>
-        <div id="jobList"></div>
-    </div>
+        <!-- Filtering Buttons -->
+        <button type="button" id="filter-button" class="filter-button">Filter</button>
+        <!-- image for filter -->
 
-    <footer>
-        2023 Nams
+        <button type="button" id="filter-button" class="filter-buttons">Salary</button>
+        <button type="button" id="filter-button" class="filter-buttons">Date</button>
+        <button type="button" id="filter-button" class="filter-buttons">Category</button>
+
+        <aside class="filterDiv">
+            Aside contnt
+        </aside>
+
+        <!--Loading Spinner -->
+        
+        <div class="spinner">
+            <div class="loader"></div>
+        </div>
+
+
+        <!-- Create job popup sub-menu -->
+       <div class="overlay"></div>
+        <div class="createJob" >
+            <a href="" onclick="toggleJobPanel(); return false;" style="text-decoration: none; float: right; background-color: red;border-radius: 50px;color: white;width: 25px;height: 25px;text-align: center;">X</a>
+            <div id="sucessDiv"></div>
+            <div id="failDiv"></div>
+            <form id="uploadJobForm" method="post">
+                
+                <div class="job-title">
+                    <label for="job_title">Title</label>
+                    <input name="job_title" id="job_title" type="text" required></input>
+                </div>
+                <div class="job-description">
+                    <label for="job_description">Short Description</label>
+                    <input name="job_description" id="job_description" type="text" required></input>
+                </div>
+                <div class="job-location">
+                    <label for="job_location">Location</label>
+                    <input type="text" name="job_location" id="job_location">
+                </div>
+                <div class="job-requirements">
+                    <label for="job_requirements">Job Requirements</label>
+                    <input name="job_requirements" id="job_requirements" type="text" required></input>
+                </div>
+                <div class="job-salary-range">
+                    <label for="job-salary-range">Salary Range</label>
+                    <input name="job-salary-range" id="job-salary-range" type="number" required></input>
+                </div>
+                <div class="job-category">
+                    <label for="job_category">Category</label>
+                    <input name="job_category" id="job_category" type="text" required></input>
+                </div>
+            
+                <button type="submit" id="uploadButton">Upload</button>
+            </form>
+        </div>
+        <!--Displaying of jobs and all that -->
+        <div class="job-container">
+            <h2>Job Listings</h2>
+            <div id="jobList"></div>
+        </div>
+
+        <!-- For one to get search results and filtering plus all that -->
+        <div class="searchResult">
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <a href = "/home" class="copyright">© 2023 Nams</a>
+        <a href = "#" class="Nams">Powered by NVMS softwares</a>
     </footer>
 
     <script>
+        const loaderContainer = document.getElementsByClassName("loader")[0];
+        const overlayPanel = document.getElementsByClassName("overlay")[0];
+        const spinner = document.getElementsByClassName("spinner")[0];
+        const jobPanel = document.getElementsByClassName("createJob")[0];
+        //spinner.style.display = 'block';
+
+        const toggleJobPanel = () => {
+            if (window.getComputedStyle(jobPanel).display === "block") {
+                jobPanel.style.display = "none";
+                overlayPanel.style.display = "none";
+            } else {
+                jobPanel.style.display = "block";
+                overlayPanel.style.display = "block";
+            }
+        };
+
         async function fetchAndDisplayJobs() {
+            spinner.style.display = "block";
             try {
                 const response = await fetch('/api/jobs/fetchJobs')
                 if (response.ok) {
@@ -35,24 +128,42 @@
                     // Create a job div for each job and populate it
                     jobs.forEach((job) => {
                         const jobDiv = document.createElement('div');
-                        jobDiv.classList.add('job');
+                        jobDiv.classList.add('job-div');
 
-                        const categoryHeader = document.createElement('h2');
-                        categoryHeader.textContent = job.category_id
+                        const categoryHeader = document.createElement('h3');
+                        categoryHeader.classList.add('category-name');
+                        const category_id = job.category_id;
+                        if(category_id == 1){
+                            categoryHeader.textContent = "Skilled Laborour";
+                        }else if(category_id == 2){
+                            categoryHeader.textContent = "Professional services";
+                        }else if(category_id == 3){
+                            categoryHeader.textContent = "Manual Work";
+                        }
+                        
 
-                        const titleHeader = document.createElement('h3');
+                        const titleHeader = document.createElement('h2');
+                        titleHeader.classList.add('job-title');
                         titleHeader.textContent = job.job_title;
 
+                        const salaryPara = document.createElement('p');
+                        salaryPara.classList.add('salary-range');
+                        salaryPara.textContent = `kes ${job.salary_range}`;
+
                         const descriptionPara = document.createElement('p');
+                        descriptionPara.classList.add('job-description');
                         descriptionPara.textContent = job.job_description;
 
                         const locationPara = document.createElement('p');
-                        locationPara.textContent = `Location: ${job.job_location}`;
+                        locationPara.classList.add('job-location');
+                        locationPara.textContent = `${job.job_location}`;
 
-                        const postedDatePara = document.createElement('p');
+                        const postedDatePara = document.createElement('div');
+                        postedDatePara.classList.add('job-posted-date');
                         postedDatePara.textContent = `Posted Date: ${job.posted_date}`;
 
                         jobDiv.appendChild(categoryHeader);
+                        jobDiv.appendChild(salaryPara);
                         jobDiv.appendChild(titleHeader);
                         jobDiv.appendChild(descriptionPara);
                         jobDiv.appendChild(locationPara);
@@ -66,7 +177,47 @@
             } catch (error) {
                 console.error('Fetch error:', error);
             }
+            spinner.style.display = "none";
         }
+
+         //submitting the jobs
+         document.getElementById('uploadJobForm').addEventListener('submit', async function(event){
+            event.preventDefault();
+
+            const successDiv = document.getElementById('successDiv');
+            const failDiv = document.getElementById('failDiv');
+
+            const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_Id='));
+    
+            const formData = new FormData(this);
+
+            const job_title = formData.get('job_title');
+            const job_description = formData.get('job_description')
+            const job_location = formData.get('job_location');
+            const job_requirements = formData.get('job_requirements');
+            const salary_range = formData.get('job-salary-range');
+            const category_id = formData.get('job_category');
+            const employer_id = userCookie ? userCookie.split('=')[1] : null;
+    
+            try {
+                const response = await fetch('/api/jobs/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ job_title, job_description ,job_location, job_requirements, salary_range, category_id, employer_id })
+                });
+    
+                if (response.ok) {
+                    successDiv.innerText = "Job Sucessfully Created";
+                } else {
+                    failDiv.innerText = "Job creation failed, please try again";
+                }
+                toggleJobPanel();
+            } catch (error) {
+                console.log("An error ocurred: ", error);
+            }
+        })
 
         function logoutUser() {
             document.getElementById('logoutLink').addEventListener('click', async (event) => {
@@ -87,6 +238,7 @@
                 } catch (error) {
                     console.error('Fetch error:', error);
                 }
+                
             });
         }
 

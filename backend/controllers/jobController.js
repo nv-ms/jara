@@ -14,7 +14,7 @@ const jobController = {
             const foundEmployer = await User.findOne({ where: { user_id: employer_id } });
 
             if (!foundCategory) {
-                return res.status(400).json({ error: 'Category not found' });
+                return res.status(404).json({ error: 'Category not found' });
             }
 
             if (!foundEmployer) {
