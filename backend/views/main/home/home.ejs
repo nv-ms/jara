@@ -16,15 +16,16 @@
                 <a href="/profile">My Profile</a>
                 <a href="" onclick="toggleJobPanel(); return false;">Post a Job</a>
             </div>
-            <div class="searchBar">
-                <input type="search" name="searchbar" id="searchbar" placeholder="Search for a job"><br>
-                <button type="button">Search</button>
-            </div>
+            <form id="searchForm" class="searchBar" method="post">
+                <input type="search" name="keyword" id="keyword" placeholder="Search . . ."><br>
+                <button type="submit" id = "searchBtn">Search</button>
+            </form>
         </nav>
     </header>
     <main class="content">
         
         <h1 class="introh1">Welcome to Jara, your dream job is just a click away</h1>
+        <div class="filterDiv">Aside content</div>
 
         <!-- Filtering Buttons -->
         <button type="button" id="filter-button" class="filter-button">Filter</button>
@@ -34,9 +35,6 @@
         <button type="button" id="filter-button" class="filter-buttons">Date</button>
         <button type="button" id="filter-button" class="filter-buttons">Category</button>
 
-        <aside class="filterDiv">
-            Aside contnt
-        </aside>
 
         <!--Loading Spinner -->
         
@@ -78,7 +76,7 @@
                     <input name="job_category" id="job_category" type="text" required></input>
                 </div>
             
-                <button type="submit" id="uploadButton">Upload</button>
+                <button type="submit" id="submitButton" >Upload</button>
             </form>
         </div>
         <!--Displaying of jobs and all that -->
@@ -95,6 +93,13 @@
     </main>
 
     <footer class="footer">
+    <!--container for pagination -->
+    <!-- <div class="pagination">
+        <button id="prevPage">&lt;&lt;</button>
+        
+        <button id="nextPage">>></button>
+    </div> -->
+
         <a href = "/home" class="copyright">© 2023 Nams</a>
         <a href = "#" class="Nams">Powered by NVMS softwares</a>
     </footer>
@@ -104,7 +109,9 @@
         const overlayPanel = document.getElementsByClassName("overlay")[0];
         const spinner = document.getElementsByClassName("spinner")[0];
         const jobPanel = document.getElementsByClassName("createJob")[0];
-        //spinner.style.display = 'block';
+        const submitButton = document.getElementById('submitButton');
+
+        spinner.style.display = 'block';
 
         const toggleJobPanel = () => {
             if (window.getComputedStyle(jobPanel).display === "block") {
@@ -198,26 +205,34 @@
             const salary_range = formData.get('job-salary-range');
             const category_id = formData.get('job_category');
             const employer_id = userCookie ? userCookie.split('=')[1] : null;
+
+            if(!job_title || !job_description || !job_requirements || !salary_range || !category_id){
+                submitButton.classList.add('disabledButton');
+                submitButton.innerText = ('disabled');
+            }else{
+                submitButton.classList.add('enabledButton');
+                submitButton.innerText = ('enabled');
+                try {
+                    const response = await fetch('/api/jobs/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ job_title, job_description ,job_location, job_requirements, salary_range, category_id, employer_id })
+                    });
     
-            try {
-                const response = await fetch('/api/jobs/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ job_title, job_description ,job_location, job_requirements, salary_range, category_id, employer_id })
-                });
-    
-                if (response.ok) {
-                    successDiv.innerText = "Job Sucessfully Created";
-                } else {
-                    failDiv.innerText = "Job creation failed, please try again";
-                }
-                toggleJobPanel();
-            } catch (error) {
-                console.log("An error ocurred: ", error);
+                    if (response.ok) {
+                        successDiv.innerText = "Job Sucessfully Created";
+                        toggleJobPanel();
+                    } else {
+                        failDiv.innerText = "Job creation failed, please try again";
+                    }
+                    //toggleJobPanel();
+                }catch (error) {
+                    console.log("An error ocurred: ", error);
+                }   
             }
-        })
+        });
 
         function logoutUser() {
             document.getElementById('logoutLink').addEventListener('click', async (event) => {
@@ -242,7 +257,88 @@
             });
         }
 
-        // Call the fetchAndDisplayJobs and logoutUser functions when the document is ready
+        document.getElementById('searchForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            const searchBtn = document.getElementById('searchBtn');
+            const keyword = formData.get('keyword');
+            spinner.style.display = "block";
+
+            try {
+                let url = `/api/jobs/search/${encodeURIComponent(keyword)}`;
+
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    const jobs = responseData.jobs;
+
+                    const jobListContainer = document.getElementById('jobList');
+                    jobListContainer.innerHTML = '';
+
+                    if (jobs.length === 0) {
+                        const noResultsPara = document.createElement('p');
+                        noResultsPara.textContent = 'No jobs found matching the search criteria.';
+                        jobListContainer.appendChild(noResultsPara);
+                    } else {
+                        jobs.forEach((job) => {
+                        const jobDiv = document.createElement('div');
+                        jobDiv.classList.add('job-div');
+
+                        const categoryHeader = document.createElement('h3');
+                        categoryHeader.classList.add('category-name');
+                        const category_id = job.category_id;
+                        if (category_id === 1) {
+                           categoryHeader.textContent = "Skilled Laborer";
+                        } else if (category_id === 2) {
+                            categoryHeader.textContent = "Professional Services";
+                        } else if (category_id === 3) {
+                            categoryHeader.textContent = "Manual Work";
+                        }
+
+                        const titleHeader = document.createElement('h2');
+                        titleHeader.classList.add('job-title');
+                        titleHeader.textContent = job.job_title;
+
+                        const salaryPara = document.createElement('p');
+                        salaryPara.classList.add('salary-range');
+                        salaryPara.textContent = `kes ${job.salary_range}`;
+
+                        const descriptionPara = document.createElement('p');
+                        descriptionPara.classList.add('job-description');
+                        descriptionPara.textContent = job.job_description;
+
+                        const locationPara = document.createElement('p');
+                        locationPara.classList.add('job-location');
+                        locationPara.textContent = `Location: ${job.job_location}`;
+
+                        const postedDatePara = document.createElement('p');
+                        postedDatePara.classList.add('job-posted-date');
+                        postedDatePara.textContent = `Posted Date: ${job.posted_date}`;
+
+                        jobDiv.appendChild(categoryHeader);
+                        jobDiv.appendChild(titleHeader);
+                        jobDiv.appendChild(salaryPara);
+                        jobDiv.appendChild(descriptionPara);
+                        jobDiv.appendChild(locationPara);
+                        jobDiv.appendChild(postedDatePara);
+
+                        jobListContainer.appendChild(jobDiv);
+                    });
+                }
+            } else {
+                console.error('Failed to fetch search results');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        } finally {
+            spinner.style.display = "none";
+        }
+    });
+
+
         document.addEventListener('DOMContentLoaded', () => {
             fetchAndDisplayJobs();
             logoutUser();

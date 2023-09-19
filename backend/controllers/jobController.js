@@ -3,6 +3,8 @@ const Category = require('../models/categories');
 const User = require('../models/users');
 const deletedJob = require('../models/deletedJobs');
 const { v4: uuidv4 } = require('uuid');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const { json } = require('sequelize');
 
 const jobController = {
@@ -107,14 +109,35 @@ const jobController = {
             console.log(error);
         }
     },
-    /*searchJobDetails:async(req, res)=> {
-        try{
-
-        }catch(error)
-        {
-
+    searchJobs: async (req, res) => {
+        try {
+            const { keyword } = req.params; // Use req.params to access the keyword in the URL
+            const jobResults = await Job.findAll({
+                where: {
+                    [Op.or]: [
+                        { job_title: { [Op.like]: `%${keyword}%` } },
+                        { job_description: { [Op.like]: `%${keyword}%` } },
+                        { job_location: { [Op.like]: `%${keyword}%` } },
+                    ],
+                },
+            });
+    
+            if (jobResults.length === 0) {
+                return res.status(404).json({ error: 'No jobs found matching the search criteria.' });
+            }
+    
+            res.status(200).json({ jobs: jobResults });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while searching for jobs.' });
         }
-    }*/
+    }
+    
+    
+    
+    
+    
+    
 };
 
 module.exports = jobController;

@@ -133,7 +133,14 @@
 .content .homeTitle{
   text-align: center;
 }
-
+.content .filterDiv{
+  margin-left: 10px;
+  float: right;
+  background-color: #1f61b8;
+  display:block;
+  display: flex;
+  align-self: flex-end;
+}
 .content .filter-button{
   float: right;
   padding: 5px;
@@ -168,10 +175,7 @@
   background-color: #333;
   color: #bebebe;
 }
-.content .filterDiv{
-  float: left;
-  background-color: #00295f;
-}
+
 
 
 /* Job list Styling */
@@ -186,6 +190,7 @@
 .job-div:hover{
   box-shadow: 5px 15px 25px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  transition: .25s;
 }
 
 .job-div .category-name{
@@ -257,11 +262,38 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.enabledButton{
+  display: block;
+}
+
+.disabledButton{
+  display: block;
+}
+
 
 
 .footer{
   max-width: 100%;
   
+}
+
+/* Add CSS styles for pagination */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button.current-page {
+  background-color: #ff9900;
 }
 .Nams{
   float: right;
