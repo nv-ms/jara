@@ -1,6 +1,5 @@
 const sequelize = require("../config/database");
 const { DataTypes } = require("sequelize"); 
-const categories = require('./categories');
 const users = require("./users"); 
 
 const Jobs = sequelize.define('Jobs', {
@@ -12,17 +11,17 @@ const Jobs = sequelize.define('Jobs', {
         type:DataTypes.STRING,
         allowNull:false
     },
-    category_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        references: {
-            model: categories,
-            key: 'category_id'
-        }
+    job_type:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    short_job_description:{
+        type:DataTypes.STRING,
+        allowNull:false
     },
     job_description: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     job_location: {
         type: DataTypes.STRING,
@@ -32,9 +31,13 @@ const Jobs = sequelize.define('Jobs', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    salary_range: {
+    min_salary: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    max_salary:{
+        type:DataTypes.STRING,
+        allowNull:true
     },
     posted_date: {
         type: DataTypes.DATE,
@@ -52,7 +55,6 @@ const Jobs = sequelize.define('Jobs', {
     timestamps: false
 });
 
-Jobs.belongsTo(categories, { foreignKey: 'category_id' });
 Jobs.belongsTo(users, { foreignKey: 'employer_id' });
 
 module.exports = Jobs;

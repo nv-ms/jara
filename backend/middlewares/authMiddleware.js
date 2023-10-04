@@ -10,7 +10,6 @@ const authenticateMiddleware = (req, res, next) => {
     const token = authHeader.split("authtoken=")[1];
     
     if (!token) {
-        //return res.status(401).json({ error: 'Unauthorized, invalid token' });
         res.redirect('/login');
     }
 

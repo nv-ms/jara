@@ -1,5 +1,4 @@
 const Job = require('../models/jobs');
-const Category = require('../models/categories');
 const User = require('../models/users');
 const deletedJob = require('../models/deletedJobs');
 const { v4: uuidv4 } = require('uuid');
@@ -10,15 +9,9 @@ const { json } = require('sequelize');
 const jobController = {
     createJob: async (req, res) => {
         try {
-            const {job_title, job_description, job_location, job_requirements, salary_range, category_id, employer_id } = req.body;
+            const {job_title, job_type,short_job_description, job_description, job_location, job_requirements, min_salary, max_salary, employer_id } = req.body;
 
-            const foundCategory = await Category.findOne({ where: { category_id: category_id } });
             const foundEmployer = await User.findOne({ where: { user_id: employer_id } });
-
-            if (!foundCategory) {
-                return res.status(404).json({ error: 'Category not found' });
-            }
-
             if (!foundEmployer) {
                 return res.status(400).json({ error: 'Employer not found' });
             }
@@ -38,11 +31,13 @@ const jobController = {
             const newJob = await Job.create({
                 job_id : uniqueID,
                 job_title,
-                category_id,
+                job_type,
+                short_job_description,
                 job_description,
                 job_location,
                 job_requirements,
-                salary_range,
+                min_salary,
+                max_salary,
                 posted_date: currentDate,
                 employer_id
             });
@@ -65,11 +60,13 @@ const jobController = {
             const archivedJob = await deletedJob.create({
                 job_id: job.job_id,
                 job_title: job.job_title,
+                job_type: job.job_type,
+                short_job_description: job.short_job_description,
                 job_description: job.job_description,
                 job_location: job.job_location,
                 job_requirements: job.job_requirements,
-                category_id: job.category_id,
-                salary_range: job.salary_range,
+                min_salary: job.min_salary,
+                max_salary: job.max_salary,
                 posted_date: job.posted_date,
                 deleted_date: new Date().toISOString().split('T')[0],
                 employer_id: job.employer_id,
@@ -111,33 +108,35 @@ const jobController = {
     },
     searchJobs: async (req, res) => {
         try {
-            const { keyword } = req.params; // Use req.params to access the keyword in the URL
+            const { keyword } = req.params;
             const jobResults = await Job.findAll({
                 where: {
                     [Op.or]: [
-                        { job_title: { [Op.like]: `%${keyword}%` } },
-                        { job_description: { [Op.like]: `%${keyword}%` } },
-                        { job_location: { [Op.like]: `%${keyword}%` } },
+                        {job_title: {[Op.like]: `%${keyword}%`}},
+                        {job_description: {[Op.like]: `%${keyword}%`}},
+                        {job_location: {[Op.like]: `%${keyword}%`}}
                     ],
                 },
             });
     
             if (jobResults.length === 0) {
-                return res.status(404).json({ error: 'No jobs found matching the search criteria.' });
+                return res.status(404).json({error:"No job was found matching that criteria"});
             }
     
             res.status(200).json({ jobs: jobResults });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'An error occurred while searching for jobs.' });
+            res.status(500).json({ error: 'An error occurred while searching for jobs.'});
+        }
+    },
+    filterJobs : async(req,res) => {
+        try {
+            
+        } catch (error) {
+            res.status(500).json({error:"An error ocurred while trying to fetch" });
+            console.error(error);
         }
     }
-    
-    
-    
-    
-    
-    
 };
 
 module.exports = jobController;

@@ -5,23 +5,19 @@ const loginMiddleware = (req, res, next) => {
     const authHeader = req.headers.cookie;
 
     if (!authHeader) {
-        // Check if the current route is already '/login'
         if (req.url === '/login') {
-            return next(); // Continue to the login route
+            return next(); 
         }
-        // Redirect to the login page
-        return res.redirect('/login');
+        return res.redirect('/');
     }
 
     const token = authHeader.split("authtoken=")[1];
 
     if (!token) {
-        // Check if the current route is already '/login'
         if (req.url === '/login') {
-            return next(); // Continue to the login route
+            return next(); 
         }
-        // Redirect to the login page
-        return res.redirect('/login');
+        return res.redirect('/home');
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -29,12 +25,10 @@ const loginMiddleware = (req, res, next) => {
             return res.redirect('/login');
         }
 
-        // Check if the user is already on the home page
         if (req.url === '/home') {
-            return next(); // Continue to the next middleware
+            return next(); 
         }
 
-        // Redirect to the home page
         return res.redirect('/home');
     });
 };

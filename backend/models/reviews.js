@@ -24,6 +24,10 @@ const reviews = sequelize.define('reviews',{
             key:"job_id"
         }
     },
+    rating:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+    },
     message:{
         type:DataTypes.STRING,
         allowNull:true
@@ -31,10 +35,6 @@ const reviews = sequelize.define('reviews',{
     posted_date:{
         type:DataTypes.STRING,
         allowNull:true
-    },
-    rating:{
-        type:DataTypes.ENUM('*','**','***','****','*****'),
-        allowNull:false
     }
 },{
     timestamps:false

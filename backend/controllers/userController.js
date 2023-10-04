@@ -2,17 +2,17 @@ const userModel = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
+const {v4: uuidv4} = require('uuid');
 
 const userController = {
     registerUser: async (req, res) => {
         try {
-            const { user_id, username, first_name, last_name, phone_number, email, password } = req.body;
+            const { username, first_name, last_name, phone_number, email, password } = req.body;
             const existingUser = await userModel.findOne({
                 where: {
                     [Sequelize.Op.or]: [
                         { email },
                         { phone_number: req.body.phone_number },
-                        { user_id: req.body.user_id },
                         { username: req.body.username }
                     ]
                 }
@@ -29,11 +29,18 @@ const userController = {
                     return res.status(400).json({ error: 'The selected username is not available, please choose another one' });
                 }
             };
-            
+
+            let uniqueID = uuidv4();
+            let existsInuserTable = await userModel.findOne({ where: { user_id: uniqueID } });
+
+            while (existsInuserTable) {
+                uniqueID = uuidv4();
+                existsInuserTable = await userModel.findOne({ where: { user_id: uniqueID } });
+            }
             const hashedPassword = await bcrypt.hash(password, 10);
-    
+            console.log(uniqueID);
             const newUser = await userModel.create({
-                user_id,
+                user_id : uniqueID,
                 username,
                 first_name,
                 last_name,
@@ -42,10 +49,11 @@ const userController = {
                 password_hash: hashedPassword
             });
     
-            const token = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY);
-            res.cookie('authtoken', token); 
-            res.cookie('userId', newUser.id);
-            res.status(201).json({ authToken: token });
+            const token = jwt.sign({ userId: newUser.user_id }, process.env.SECRET_KEY);
+            
+            res.cookie('user_id', uniqueID);
+            res.cookie('authtoken', token);
+            res.status(201).json({ message:"Sucessful"});
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'An error occurred' });
@@ -66,7 +74,7 @@ const userController = {
             }
 
             const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY); 
-            res.cookie('user_Id', user.user_id);
+            res.cookie('user_id', user.user_id);
             res.cookie('authtoken', token);
             res.status(200).json({ authToken: token });
 
@@ -79,10 +87,9 @@ const userController = {
     logoutUser: async (req, res) => {
         try {
             res.clearCookie('authtoken');
-            res.clearCookie('userId');
+            res.clearCookie('user_id');
             res.status(200).json({message:'Logged out sucessfully'});
         } catch (error) {
-            console.error("an error ocurred:", error);
             res.status(500).json({error:'An error ocurred', error});
         }
     },

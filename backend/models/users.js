@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 
 const users = sequelize.define('users', {
     user_id: {
-        type: DataTypes.STRING, 
+        type: DataTypes.STRING,
         primaryKey: true
     },
     username: {
@@ -15,12 +15,13 @@ const users = sequelize.define('users', {
         allowNull: false
     },
     last_name: {
-        type: DataTypes.STRING, 
+        type: DataTypes.STRING,
         allowNull: false
     },
     phone_number:{
         type:DataTypes.INTEGER,
-        allowNull:false
+        allowNull:false,
+        unique:true
     },
     email: {
         type: DataTypes.STRING, 

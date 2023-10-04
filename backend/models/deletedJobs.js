@@ -2,7 +2,6 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../config/database');
 const users = require('./users');
 const jobs = require('./jobs');
-const categories = require('./users');
 
 const deletedJobs = sequelize.define('deleted_Jobs',{
     job_id:{
@@ -13,6 +12,14 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
     job_title:{
         type: DataTypes.STRING,
         allowNull: false
+    },
+    job_type:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    short_job_description:{
+        type:DataTypes.STRING,
+        allowNull:false
     },
     job_description:{
         type: DataTypes.STRING,
@@ -26,17 +33,13 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
         type: DataTypes.STRING,
         allowNull: true
     },
-    category_id:{
-        type:DataTypes.STRING,
-        allowNull:false,
-        references:{
-            model:categories,
-            key:"category_id"
-        }
-    },
-    salary_range:{
+    min_salary: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    max_salary:{
+        type:DataTypes.STRING,
+        allowNull:true
     },
     posted_date:{
         type: DataTypes.DATE,

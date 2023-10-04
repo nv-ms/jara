@@ -10,7 +10,13 @@
     <h2>Welcome back <span id="user-greeting"></span></h2>
     <a href="Home">Home</a>
     <div class="profile">
-        <div class="title"></div>
+        <div class="title">
+            <div class="header">
+                <div class="links">
+                    <a href="#" id="logoutLink">Logout</a>
+                </div>
+            </div>
+        </div>
         <div class="body">
             <div class="username"></div>
             <div class="name">
@@ -24,7 +30,7 @@
 
     <script>
         
-        const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_Id='));
+        const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
         const userId = userCookie ? userCookie.split('=')[1] : null;
 
         async function fetchData() {
@@ -47,7 +53,34 @@
                 console.error('Error fetching data:', error);
             }
         }
-        fetchData();
+
+        function logoutUser() {
+            document.getElementById('logoutLink').addEventListener('click', async (event) => {
+                event.preventDefault();
+                try {
+                    const response = await fetch('api/users/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        console.error('Please try again');
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+                
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            logoutUser();
+        });
+        
     </script>
 </body>
 </html>

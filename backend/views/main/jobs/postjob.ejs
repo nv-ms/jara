@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jara</title>
+</head>
+<body>
+    Post your job here
+    <div class="spinner">
+        <div class="loader"></div>
+    </div>
+    <div class="createJob" >
+        <div id="successDiv"></div>
+        <div id="failDiv"></div>
+        <a href="/home">Back</a>
+        <form id="uploadJobForm" method="post">
+            <div class="job-title">
+                <label for="job_title">Title</label>
+                <input name="job_title" id="job_title" type="text" required></input>
+            </div>
+                <div class="job_type">
+                    <label for="selectedJobType">Choose the job type:</label>
+                        <select id="selectedJobType" name="selectedJobType">
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Voluntary">Voluntary</option>
+                        </select>
+                </div>
+                
+                <div class="short_job-description">
+                    <label for="short_job_description">Short Description</label>
+                    <input name="short_job_description" id="short_job_description" type="text" required></input>
+                </div>
+                <div class="job-description">
+                    <label for="job_description">Detailed Job Description</label>
+                    <input name="job_description" id="job_description" type="text"></input>
+                </div>
+                <div class="job-location">
+                    <label for="job_location">Location</label>
+                    <input type="text" name="job_location" id="job_location">
+                </div>
+                <div class="job-requirements">
+                    <label for="job_requirements">Job Requirements</label>
+                    <input name="job_requirements" id="job_requirements" type="text" required></input>
+                </div>
+                <div class="min-salary">
+                    <label for="min_salary">Minumum Salary</label>
+                    <input name="min_salary" id="min_salary" type="number" required></input>
+                </div>
+                <div class="max-salary">
+                    <label for="max_salary">Max Salary</label>
+                    <input name="max_salary" id="max_salary" type="number"></input>
+                </div>
+                <button type="submit" id="submitButton">Upload</button>
+            </form>
+        </div>
+    <script>
+
+        document.getElementById('uploadJobForm').addEventListener('submit', async function(event){
+            event.preventDefault();
+
+            const successDiv = document.getElementById('successDiv');
+            const failDiv = document.getElementById('failDiv');
+            const selectedJobElement = document.getElementById('selectedJobType');
+
+            const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
+
+            const formData = new FormData(this);
+
+            const job_title = formData.get('job_title');
+            const job_type = selectedJobElement.value;
+            const short_job_description = formData.get('short_job_description')
+            const job_description = formData.get('job_description');
+            const job_location = formData.get('job_location');
+            const min_salary = formData.get('min_salary');
+            const max_salary = formData.get('max_salary');
+            const job_requirements = formData.get('job_requirements');
+            const employer_id = userCookie ? userCookie.split('=')[1] : null;
+
+            try {
+                const response = await fetch('/api/jobs/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ job_title, job_type, short_job_description, job_description ,job_location, job_requirements, min_salary, max_salary, employer_id })
+                });
+
+                if (response.ok) {
+                    successDiv.innerText = "Job Successfully Created";
+                    window.location.href = '/home';
+                    window.location('/home');
+                } else {
+                    failDiv.innerText = "Job creation failed, please try again";
+                }
+            } catch (error) {
+                console.log("An error occurred: ", error);
+            }
+        });
+    </script>
+</body>
+</html>

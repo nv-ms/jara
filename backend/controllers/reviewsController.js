@@ -1,14 +1,24 @@
 const reviewsModel = require('../models/reviews');
 const jobsModel = require('../models/jobs');
 const userModel = require('../models/users');
+const {v4: uuidv4} = require('uuid');
 
 const reviewsController = {
     createReview: async (req, res)=>{
         try {
-            const {review_id, user_id, job_id, message, rating} = req.body;
+            const {user_id, job_id, message, rating} = req.body;
 
             const foundUser = await userModel.findOne({where:{user_id:user_id}});
             const foundJob = await jobsModel.findOne({where:{job_id:job_id}});
+
+            const currentDate = new Date().toISOString().split('T')[0];
+            
+            let uniqueID = uuidv4();
+            let existsInReviewsTable = await reviewsModel.findOne({ where: { review_id: uniqueID } });
+            while (existsInReviewsTable) {
+                uniqueID = uuidv4();
+                existsInReviewsTable = await reviewsModel.findOne({ where: { review_id: uniqueID }});
+            }
 
             if(!foundUser){
                 return res.status(404).json({error:"User Not found"});
@@ -17,10 +27,8 @@ const reviewsController = {
                 return res.status(404).josn({error:"Job not found"});
             }
 
-            const currentDate = new Date().toISOString().split('T')[0];
-            
             const newReview = await reviewsModel.create({
-                review_id,
+                review_id:uniqueID,
                 user_id,
                 job_id,
                 message,
@@ -59,6 +67,17 @@ const reviewsController = {
         } catch (error) {
             res.status(500).json({error:"An error ocurred while trying to feth reviews details"});
             console.log(error);
+        }
+    },
+    getAllReviews:async(req, res)=>{
+        try {
+            const reviews = await reviewsModel.findAll();
+            if(!reviews){
+                res.status(404).json({error: "No reviews found"});
+            }
+            res.status(200).json({reviews});
+        } catch (error) {
+            res.status(500).json({error:"An error ocurred while fetching reviews"});
         }
     }
 };

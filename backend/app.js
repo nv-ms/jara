@@ -1,14 +1,13 @@
 const express = require('express');
-const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-const userController = require('./controllers/userController');
 const authenticateMiddleware = require('./middlewares/authMiddleware');
 const cookieParser = require('cookie-parser');
 
 
 dotenv.config();
+const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,14 +19,12 @@ app.use(cookieParser());
 
 const userRoutes = require('./routes/userRoutes');
 const jobRoutes = require('./routes/jobRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const reviewsRoutes = require('./routes/reviewsRoutes');
 const loginMiddleware = require('./middlewares/loginMiddleware');
 
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
-app.use('/api/categories', categoryRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/reviews', reviewsRoutes);
 
@@ -59,58 +56,18 @@ app.get('/register', (req, res) => {
 app.get('/home', authenticateMiddleware, (req, res) => {
     res.render('main/home/home.ejs');
 });
-
 app.get('/profile', authenticateMiddleware,(req, res)=>{
     res.render('main/profile/profile.ejs');
 });
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const loginResult = await userController.loginUser(email, password);
-
-        if (loginResult.success) {
-            //const token = loginResult.token; 
-            res.cookie('authtoken', token);
-            res.cookie('id', id);
-            res.redirect('/home');
-        } else {
-            res.status(loginResult.statusCode).json({ error: loginResult.message });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred' });
-    }
+//job routes
+app.get('/jobs', authenticateMiddleware,(req, res)=>{
+    res.render('main/jobs/jobs.ejs');
 });
 
-app.post('/register', async (req, res) => {
-    const { user_id, username, first_name, last_name, email, phone_number, password } = req.body;
-
-    try {
-        const registrationResult = await userController.registerUser(
-            user_id,
-            username,
-            first_name,
-            last_name,
-            email,
-            phone_number,
-            password
-        );
-
-        if (registrationResult.success) {
-            const token = registrationResult.token; 
-            res.cookie('authToken', token);
-            //res.redirect('/home');
-        } else {
-            res.status(registrationResult.statusCode).json({ error: registrationResult.message });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred' });
-    }
+app.get('/postJob', authenticateMiddleware,(req,res)=>{
+    res.render('main/jobs/postjob.ejs');
 });
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
