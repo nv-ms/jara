@@ -95,9 +95,10 @@
     <div class="main">
         <div class="left"></div>
         <div class="right">
-            <h1>Login</h1>
+            
             <div class="container">
                 <form id="loginForm" class="loginForm" method="post">
+                    <h1>Login</h1>
                     <h2>Welcome Back. Please login</h2>
 
                     <div id="statusDiv" class="statusDiv"></div>
@@ -133,7 +134,6 @@
         });
 
         if (response.ok) {
-            statusDiv.innerHTML='Welcome back';
             const token = await response.json();
             window.location.href = '/home';
             window.history.replaceState({}, document.title, "/home");

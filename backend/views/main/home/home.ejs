@@ -12,29 +12,78 @@
             box-sizing: border-box;
             color: black;
         }
-        .header{
+       
+        .head{
             width: 100%;
             position: fixed;
+            display: flex;
+            top: 0;
+            padding: 10px;
+            margin-top: -10px;
+            background-color: #007bff;
+            flex-direction: column;
+            z-index: 2;
+        }
+       
+        .header{
+            width: 100%;
             background-color: #007bff;
             display: flex;
             justify-content: start;
             height: 100px;
             color: white;
         }
+        .logo{
+            padding: 10px;
+        }
         .links{
             width: 100%;
             display: flex;
             justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            font-size: 17px;
         }
         .link{
-            background-color: #bebebe;
+            background-color: #008100;
+            color: white;
             margin: 5px;
             width: 100px;
             height: 40px;
             padding: 10px;
             text-decoration: none;
+            
             border-radius: 5px;
         }
+        .link:hover{
+            background-color: #00000065;
+            transition: .5s;
+        }
+        .searchBar{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .keyword{
+            border: none;
+            text-align: center;
+            height: 30px;
+            width: 300px;
+            font-size: 15px;
+            margin: 5px;
+            border-radius: 20px;
+        }
+        .submit{
+            margin: 5px;
+            height: 30px;
+            border: none;
+            background-color: #ff5e00;
+            color: white;
+            font-size: 20px;
+            border-radius: 20px;
+            width: 100px;
+        }
+        
 
         /* Spinner*/
         .spinner{
@@ -89,15 +138,11 @@
         }
 
         .content {
-            max-width: 100%;
-            margin: 10px auto;
-            padding: 5px;
-            box-sizing: border-box;
+            width: 100%;
+            margin-top: 150px;
+            padding: 5pz;
         }
-        .content .introh1{
-            text-align: center;
-            margin-bottom: 50px;
-        }
+        
 
         .content .homeTitle{
             text-align: center;
@@ -299,24 +344,29 @@
     }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1>Jara</h1>
+<body class="main">
+    <div class="head">
+        <div class="header">
+            <img class="logo" src="../public/images/logowhite.png" alt="logo" width="75px" height="75px">
             <div class="links">
                 <a class="link" href="/home">Home</a>
                 <a class="link" href="/postJob">Post a Job</a>
                 <a class="link" href="/profile">My Profile</a>
             </div>
         </div>
-    <div class="search">
-        <form id="searchForm" class="searchBar" method="post">
-            <input type="search" name="keyword" class="keyword" id="keyword" placeholder="Search . . ." required autocomplete="off">
-            <button type="submit" class="searchBtn" id="searchBtn">Search</button>
-        </form>
+        
+   
+        <div class="search">
+            <form id="searchForm" class="searchBar" method="post">
+                <input type="search" name="keyword" class="keyword" id="keyword" placeholder="Search . . ." required autocomplete="off">
+                <button type="submit" class="submit" id="searchBtn">Search</button>
+            </form>
+        </div>
     </div>
+
     <main class="content" id="content_body">
         
-        <h1 class="introh1">Welcome to Jara, your dream job is just a click away</h1>
+        <h1 class="H1intro">Welcome to Jara, your dream job is just a click away</h1>
         <div id="mainFilter" class="mainFilter">
             <a href="" onclick="toggleFilter(mainFilter); return false;" style="text-decoration: none; float: right; background-color: red;border-radius: 50px;color: white;width: 25px;height: 25px;text-align: center;">X</a>
             Main filter
@@ -340,12 +390,18 @@
 
         <div class="filterDiv" id="dateFilter">
             <a href="" onclick="toggleFilter(dateFilter); return false;" style="text-decoration: none; float: right; background-color: red;border-radius: 50px;color: white;width: 25px;height: 25px;text-align: center;">X</a>
-            date div
+            <form action="" id="dateFilter">
+                <input type="date" name="startDate" id="startDate">
+                <input type="date" name="endDate" id="endDate">
+            </form>
         </div>
 
         <div class="filterDiv" id="categoryFilter">
             <a href="" onclick="toggleFilter(categoryFilter); return false;" style="text-decoration: none; float: right; background-color: red;border-radius: 50px;color: white;width: 25px;height: 25px;text-align: center;">X</a>
-            category div
+            <form action="" id="categoryFilter" >
+                <label for="category">Category</label>
+                <input type="text" name="category" id="categoryFilter">
+            </form>
         </div>
 
         <div class="spinner">
@@ -511,7 +567,7 @@
                     jobListContainer.innerHTML = '';
                     const titleHeader = document.createElement('h2');
                     titleHeader.classList.add('searchHeader');
-                    titleHeader.textContent = "Search Results";
+                    titleHeader.textContent = `Search Results for: ${keyword}`;
                     jobListContainer.appendChild(titleHeader);
 
                     if (jobs.length === 0) {
