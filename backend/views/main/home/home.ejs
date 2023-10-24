@@ -4,23 +4,316 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara</title>
-    <link rel="stylesheet" href="../public/styles/style.css">
+    <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
+    <style>
+        * {
+            margin: 0px;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            box-sizing: border-box;
+            color: black;
+        }
+        .header{
+            width: 100%;
+            position: fixed;
+            background-color: #007bff;
+            display: flex;
+            justify-content: start;
+            height: 100px;
+            color: white;
+        }
+        .links{
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .link{
+            background-color: #bebebe;
+            margin: 5px;
+            width: 100px;
+            height: 40px;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        /* Spinner*/
+        .spinner{
+            display:none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .loader {
+            top: 50%;
+            left: 50%;
+            font-size: 10px;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            position: fixed;
+            text-indent: -9999em;
+            animation: mulShdSpin .7s infinite ease;
+            transform: translateZ(0);
+            z-index: 2000;
+        }
+        @keyframes mulShdSpin {
+            0%,
+            100% {
+                box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.5), -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
+            }
+            12.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
+            }
+            25% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.5), 1.8em -1.8em 0 0em rgba(255,255,255, 0.7), 2.5em 0em 0 0em #ffffff, 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            37.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.5), 2.5em 0em 0 0em rgba(255,255,255, 0.7), 1.75em 1.75em 0 0em #ffffff, 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            50% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.5), 1.75em 1.75em 0 0em rgba(255,255,255, 0.7), 0em 2.5em 0 0em #ffffff, -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            62.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.5), 0em 2.5em 0 0em rgba(255,255,255, 0.7), -1.8em 1.8em 0 0em #ffffff, -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            75% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.5), -1.8em 1.8em 0 0em rgba(255,255,255, 0.7), -2.6em 0em 0 0em #ffffff, -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            87.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.5), -2.6em 0em 0 0em rgba(255,255,255, 0.7), -1.8em -1.8em 0 0em #ffffff;
+            }
+        }
+
+        .content {
+            max-width: 100%;
+            margin: 10px auto;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .content .introh1{
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .content .homeTitle{
+            text-align: center;
+        }
+        .content .mainFilter{
+            display: none;
+            position: absolute;
+            right: 25%;
+            margin-left: 10px;
+            width:40%;
+            height: 25%;
+            border-radius: 10px;
+            padding: 5px;
+            margin-right:5px;
+            float: right;
+            background-color: #d1d1d1;
+            box-shadow:1px 2px 3px 10px rgba(255,255,255,.1);
+        }
+        .content .filterDiv{
+            display: none;
+            position: absolute;
+            margin-left: 10px;
+            right: 25%;
+            width:40%;
+            height: 25%;
+            border-radius: 10px;
+            padding: 5px;
+            margin-right:5px;
+            float: right;
+            background-color: #d1d1d1;
+            box-shadow:1px 2px 3px 10px rgba(255,255,255,.1);
+        }
+        .content .filter-button{
+            float: right;
+            padding: 5px;
+            margin-left: 5%;
+            margin-right: 50px;
+            background-color: #006eff;
+            outline: none;
+            border: none;
+            color: whitesmoke;
+            width: 50px;
+            height: 30px;
+            border-radius: 20px;
+            align-self: center;
+        }
+        .content .filter-button:hover{
+            background-color: #00295f;
+        }
+
+        .content .filter-buttons{
+            padding: 5px;
+            float: right;
+            background-color: #bebebe;
+            outline: none;
+            border: none;
+            color: rgb(54, 54, 54);
+            width: 75px;
+            height: 30px;
+            border-radius: 20px;
+            align-self: center;
+        }
+        .content .filter-buttons:hover{
+            background-color: #333;
+            color: #bebebe;
+        }
+
+        .content .filterDiv{
+            display: none;
+        }
+
+        .job-div{
+            margin:20px;
+            padding:10px 16px;
+            background-color: rgb(240, 240, 240);
+            border-bottom: 1px solid rgb(243, 243, 243);
+            border-radius: 5px;
+        }
+
+        .job-div:hover{
+            box-shadow: 5px 15px 25px rgba(0, 0, 0, 0.2);
+            background-color: rgb(223, 223, 223);
+            cursor: pointer;
+            transition: .25s;
+            scroll-behavior:smooth;
+        }
+
+        .job-div .category-name{
+            font-size: 15px;
+            margin-bottom: 4px;
+            text-decoration: underline;
+        }
+
+        .job-div .job-title{
+            color: #006eff;
+            font-size: 30px;
+        }
+
+        .job-div .salary-range{
+            color: #207eaa;
+            font-size: 17px;
+            z-index: 1;
+            font-weight:1000;
+            float:right;
+        }
+
+        .job-div .jobDescription{
+            z-index: 0;
+            word-wrap:normal;
+            word-break:break-all;
+            font-size: 15px;
+        }
+
+        .job-div .job-location{
+            font-size: 20px;
+            z-index: 1;
+            font-weight: bolder;
+            float: right;
+        }
+
+        .job-div .job-posted-date{
+            font-weight: 1000;
+            margin-top: 6px;
+            font-size: 15px;
+            z-index: 1;
+        }
+
+
+        .overlay{
+            display:none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 998;
+        }
+
+        .createJob{
+            display:none;
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 1rem;
+            max-width: 400px;
+            width: 100%;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .footer{
+            max-width: 100%;
+        }
+
+        /* Add CSS styles for pagination */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.current-page {
+            background-color: #ff9900;
+        }
+        .Nams{
+            float: right;
+        }
+        .copyright{
+            text-decoration: none;
+            margin-left: 5px;
+            text-align: center;
+        }
+        .copyright:hover{
+            cursor:pointer;
+        }
+    @media (max-width:600px){
+        .headNav .headnavH1{
+            font-size: 25px;
+            text-align: center;
+            z-index: 3;
+            cursor: pointer;
+            color: #333;
+            background-color: #c9c9c9;
+            z-index: 2;
+            width: 100%;
+        }
+    }
+    </style>
 </head>
 <body>
-    <header class="headNav">
-        <h1 class="headnavH1">Jara</h1>
-        <nav class="navbar">
+    <div class="header">
+        <h1>Jara</h1>
             <div class="links">
-                <a href="/home">Home</a>
-                <a href="/profile">My Profile</a>
-                <a href="/postJob">Post a Job</a>
+                <a class="link" href="/home">Home</a>
+                <a class="link" href="/postJob">Post a Job</a>
+                <a class="link" href="/profile">My Profile</a>
             </div>
-            <form id="searchForm" class="searchBar" method="post">
-                <input type="search" name="keyword" id="keyword" placeholder="Search . . ." required><br>
-                <button type="submit" id="searchBtn">Search</button>
-            </form>
-        </nav>
-    </header>
+        </div>
+    <div class="search">
+        <form id="searchForm" class="searchBar" method="post">
+            <input type="search" name="keyword" class="keyword" id="keyword" placeholder="Search . . ." required autocomplete="off">
+            <button type="submit" class="searchBtn" id="searchBtn">Search</button>
+        </form>
+    </div>
     <main class="content" id="content_body">
         
         <h1 class="introh1">Welcome to Jara, your dream job is just a click away</h1>
@@ -55,20 +348,14 @@
             category div
         </div>
 
-        <!-- Loading Spinner -->
         <div class="spinner">
             <div class="loader"></div>
         </div>
 
-        <!-- Create job popup sub-menu -->
-        
-
-        <!-- Displaying job listings -->
         <div class="job-container">
             <div id="jobList"></div>
         </div>
 
-        <!-- For one to get search results and filtering plus all that -->
         <div class="searchResult"></div>
 
     </main>
@@ -143,7 +430,7 @@
 
                     const titleHeader = document.createElement('h2');
                     titleHeader.classList.add('titleHeader');
-                    titleHeader.textContent = "Job Listings";
+                    titleHeader.textContent = "Job Listing";
                     jobListContainer.appendChild(titleHeader);
 
                     jobs.forEach((job) => {

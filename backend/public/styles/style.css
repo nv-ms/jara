@@ -243,6 +243,7 @@
   background-color: rgb(223, 223, 223);
   cursor: pointer;
   transition: .25s;
+  scroll-behavior:smooth;
 }
 
 .job-div .category-name{
@@ -286,7 +287,6 @@
 }
 
 
-/* Job creation styling */
 .overlay{
   display:none;
   position: fixed;

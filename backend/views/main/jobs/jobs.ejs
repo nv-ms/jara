@@ -3,8 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/styles/style.css">
     <title>Jobs </title>
+    <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
+    <style>
+        * {
+            margin: 0px;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .headNav{
+            background-color: #c9c9c9;
+            overflow: hidden;
+            color: #207eaa;
+            margin:0;
+            z-index: 10;
+        }
+        .job-descriptionDetails{
+            margin:10px;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows:.2fr 1fr 1fr .5fr ;
+            gap:5px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .jobdet-header {
+            grid-column-start: 1;
+            grid-column-end:4;
+            grid-row-start: 1;
+            background-color: #bebebe;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        .jobdet-header h1{
+            text-align: center;
+            text-decoration: underline;
+        }
+        .backbtn{
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            background-color: #00295f;
+            color: #bebebe;
+        }
+        .job-Details-description{
+            background-color: #f1f1f1;
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-row-start: 2;
+            grid-row-end: 4;
+            padding:10px;
+            border-radius: 20px;
+        }
+
+        .jobdet-div{
+            padding:10px;
+            margin-left: 10%;
+        }
+
+        .jobdet-div .jobdet-title{
+            font-weight: bolder;
+            text-decoration: underline;
+            font-size: 2rem;
+            color: #0058ca;
+        }
+        .jobdet-div .jobdet-cat{
+            font-weight: bold;
+        }
+        .jobdet-div .jobdet-salary{
+            font-size: 30px;
+        }
+
+        .jobdet-div .jobdet-s-description{
+            font-size: larger;
+        }
+        .jobdet-div .jobdet-description{
+            margin-top: 5%; 
+        }
+        
+        .jobdet-div .jobdet-postdate{
+            font-size: 20px;
+        }
+        
+        .empdet-title{
+            margin-top: 10px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .jobdet-apply{
+            grid-row-start: 2;
+            grid-column-start: 3;
+            grid-column-end: 3;
+            grid-row-end: 2;
+            border-radius: 20px;
+            padding: 20px;
+            background-color: #ebebeb;
+        }
+        .job-Reviews{
+            grid-row-start: 3;
+            grid-row-end: 3;
+            grid-column-start: 3;
+            background-color: #ebebeb;
+            padding: 20px;
+            border-radius: 20px;
+        } 
+
+        .jobdet-footer{
+            grid-column-start: 1;
+            grid-column-end: 4;
+            background-color: #bebebe;
+            border-radius: 20px;
+            padding:10px;
+            display: flex;
+            flex-direction: row;
+        }
+        .otherJobs{
+            background-color: #333;
+            color: #bebebe;
+            flex:1;
+            justify-content: space-evenly;
+            margin: 10px;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        .job-descriptionDetails{
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows:.2fr 1fr .5fr .3fr ;
+            gap:5px;
+            box-sizing: border-box;
+            margin:5px;
+        }
+        
+        .jobdet-header {
+            grid-column-start: 1;
+            grid-column-end:4;
+            grid-row-start: 1;
+            grid-row-end:2;
+            background-color: #bebebe;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        .job-Details-description{
+            background-color: #bebebe;
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 2;
+            grid-row-end: 2;
+            padding:10px;
+            border-radius: 20px;
+        }
+        
+        .jobdet-apply{
+            grid-row-start: 3;
+            grid-row-end: 4;
+            grid-column-start: 1;
+            grid-column-end: 4;
+            border-radius: 20px;
+            padding: 20px;
+            background-color: #bebebe;
+        }
+        .job-Reviews{
+            grid-row-start: 4;
+            grid-row-end: 4;
+            grid-column-start: 1;
+            grid-column-end: 4;
+            border-radius: 20px;
+            padding: 20px;
+            background-color: #bebebe;
+        }
+        
+        
+        .jobdet-footer{
+            display: flex;
+        }
+        .otherJobs{
+            background-color: #333;
+            color: #bebebe;
+            flex:1;
+            justify-content: space-evenly;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+
+        
+
+    </style>
 </head>
 <body>
     <div class="spinner">
@@ -20,7 +212,7 @@
             <div class="job-Details-description" id="jobDescriptionDetails"></div>
 
             <div class="jobdet-apply">
-                <button type="button" id="applyjobbtn" class="applyjob-btn">Apply</button>
+                <button type="button" id="applyjobbtn" class="applyjob-btn" onclick="">Apply</button>
                 <button type="button" id="savejobbtn" class="savejob-btn">Save</button>
             </div>
 
@@ -43,7 +235,6 @@
         </div>
     </main>
     <script>
-
         const loaderContainer = document.getElementsByClassName("loader")[0];
         const overlayPanel = document.getElementsByClassName("overlay")[0];
         const spinner = document.getElementsByClassName("spinner")[0];

@@ -9,7 +9,7 @@ const { json } = require('sequelize');
 const jobController = {
     createJob: async (req, res) => {
         try {
-            const {job_title, job_type,short_job_description, job_description, job_location, job_requirements, min_salary, max_salary, employer_id } = req.body;
+            const {job_title, job_type,short_job_description, job_description, job_location, job_requirements, min_salary, max_salary ,employer_id, directRequests } = req.body;
 
             const foundEmployer = await User.findOne({ where: { user_id: employer_id } });
             if (!foundEmployer) {
@@ -39,7 +39,8 @@ const jobController = {
                 min_salary,
                 max_salary,
                 posted_date: currentDate,
-                employer_id
+                employer_id,
+                directRequests
             });
 
             res.status(201).json({ message: 'Job listing created successfully', job: newJob });
@@ -70,6 +71,7 @@ const jobController = {
                 posted_date: job.posted_date,
                 deleted_date: new Date().toISOString().split('T')[0],
                 employer_id: job.employer_id,
+                directRequestOp:job.directRequestOp
             });
             await job.destroy();
             res.status(200).json({ message: 'Job archived successfully', archivedJob });

@@ -4,27 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara - Login</title>
-    <link rel="stylesheet" href="../public/styles/style.css">
+    <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
+    <style>
+        *{
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: black;
+            text-decoration: none;
+            text-align: center;
+        }
+        .main{
+            display: grid;
+            grid-template-columns:40% 60%;
+        }
+        .left {
+            background-color: #007bff;
+            background-image: url('../public/images/logo-blue.png');
+            background-size: 500px 500px;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container{
+            height: 80vh;
+            width: 60vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .statusDiv{
+            color: red;
+        }
+        .input{
+            width: 300px;
+            height: 30px;
+            margin: 5px;
+            border-radius: 10px;
+            border: 1px solid black;
+            font-size: 15px;
+            padding: 10px;
+        }
+        .submit{
+            width: 200px;
+            height: 40px;
+            border: none;
+            background-color: #007bff;
+            font-size: 20px;
+            color: white;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .submit:hover{
+            transition: .5s;
+            background-color: #00448d;
+            color: #00b7ff;
+        }
+        .link:hover{
+            transition: .5s;
+            text-decoration: underline;
+        }
+
+
+    @media(max-width: 700px){
+        .main {
+            margin-top: 5%;
+            display: flex;
+            flex-direction: column;
+        }
+        .left {
+            background-color: white;
+            background-image: url('../public/images/logo-white.png');
+            background-size: 200px 20px;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .container{
+            width: 100%;
+        }
+    }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form id="loginForm" method="post">
-        <div class="outputDiv">Welcome Back, please login</div>
-        <div id="successDiv"></div>
-        <div id="failDiv"></div>
+    <div class="main">
+        <div class="left"></div>
+        <div class="right">
+            <h1>Login</h1>
+            <div class="container">
+                <form id="loginForm" class="loginForm" method="post">
+                    <h2>Welcome Back. Please login</h2>
 
-
-        <div>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" required>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-        </div>
-        <button type="submit">Login</button>
-        <a href="/register">Don't have an account? Register</a>
-    </form>
+                    <div id="statusDiv" class="statusDiv"></div>
+                    <input class = "input" type="email" name="email" id="email" placeholder="Email" required><br>
+                    <input class = "input" type="password" name="password" id="password" placeholder="Password" required><br>
+                    <button class="submit" type="submit">Login</button><br>
+                    <a class = "link" href="/register">Don't have an account? Register</a>
+                </form>
+            </div>
+            
+            
+        </div>      
+    </div>
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
@@ -33,13 +119,9 @@
     const formData = new FormData(this);
     const email = formData.get('email');
     const password = formData.get('password');
-    //const outputScreen = document.getElementById('loginOutput');
 
-    //for outputting the server responses
-    const successDiv = document.getElementById('successDiv');
-    const failDiv = document.getElementById('failDiv');
+    const statusDiv = document.getElementById('statusDiv');
 
-    //console.log()
 
     try {
         const response = await fetch('api/users/login', {
@@ -51,16 +133,13 @@
         });
 
         if (response.ok) {
-            successDiv.innerHTML='Welcome back';
+            statusDiv.innerHTML='Welcome back';
             const token = await response.json();
             window.location.href = '/home';
             window.history.replaceState({}, document.title, "/home");
         } else {
-            //implement a loading system in both ways, incase of success or fail
             const errorData = await response.json();
-            //serve the client with an error message, exact error message
-            failDiv.innerHTML = errorData.error;
-            //console.error('Login failed:', errorData.error);
+            statusDiv.innerHTML = errorData.error;
         }
     } catch (error) {
         console.error('An error occurred:', error);

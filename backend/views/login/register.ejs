@@ -4,61 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara</title>
-    <link rel="stylesheet" href="../public/styles/style.css">
+    <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
+    <style>
+        *{
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: black;
+            text-decoration: none;
+            text-align: center;
+        }
+        .main{
+            display: grid;
+            grid-template-columns:60% 40%;
+        }
+        .left{
+            background-color: #007bff;
+            background-image: url('../public/images/logo-blue.png');
+            background-size: 500px 500px;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container{
+            height: 80vh;
+            width: 60vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .statusDiv{
+            color: red;
+        }
+        .input{
+            width: 300px;
+            height: 30px;
+            margin: 5px;
+            border-radius: 10px;
+            border: 1px solid black;
+            font-size: 15px;
+            padding: 10px;
+        }
+        .submit{
+            width: 200px;
+            height: 40px;
+            border: none;
+            background-color: #007bff;
+            font-size: 20px;
+            color: white;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .submit:hover{
+            transition: .5s;
+            background-color: #00448d;
+            color: #00b7ff;
+        }
+        .link:hover{
+            transition: .5s;
+            text-decoration: underline;
+        }
+
+
+    @media(max-width: 700px){
+        .main {
+            margin-top: 5%;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .left {
+            background-color: white;
+            background-image: url('../public/images/logo-white.png');
+            background-size: 200px 200px;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100px;
+        }
+        .container{
+            width: 100%;
+        }
+    }
+    </style>
 </head>
     <body>
-        <h1>Register</h1>
-        <form id="registerForm" method="post">
-            <div class="outputDiv">Welcome, please register to continue</div>
-            <div id="sucessDiv"></div>
-            <div id="failDiv"></div>
+        <div class="main">
+            <div class="right">
+                <h1>Register</h1>
+                <h2>Welcome, please register to continue</h2>
+                <div class="container">
+                    <form id="registerForm" method="post">
 
-            <div>
-                <label for="username">username</label>
-                <input type="text" name="username" id="username" required>
+                        <div id="statusDiv" class="statusDiv"></div>
+
+                        <input class="input" type="text" name="username" id="username" required placeholder="Username"><br>
+                        <input class="input" type="text" name="first_name" id="first_name" required placeholder="First Name">
+                        <input class="input" type="text" name="last_name" id="last_name" required placeholder="Last Name"><br>
+                        <input class="input" type="email" name="email" id="email" required placeholder="Email">
+                        <input class="input" type="number" name="phone_number" id="phone_number" required placeholder="Phone"><br>
+                        <input class="input" type="password" name="password" id="password" required placeholder="Password">
+                        <input class="input" type="password" name="ConfPass" id="ConfPass" required placeholder="Confirm Password"><br>
+            
+                        <button class="submit" type="submit">Register</button><br>
+                        <a class="link" href="/login">Already have an account, Login</a>
+                    </form>
+                </div>
             </div>
+            <div class="left"></div>
+        </div>
 
-            <div>
-                <label for="first_name">first_name</label>
-                <input type="text" name="first_name" id="first_name" required>
-            </div>
-
-            <div>
-                <label for="last_name">last_name</label>
-                <input type="text" name="last_name" id="last_name" required>
-            </div>
-
-            <div>
-                <label for="email">email</label>
-                <input type="email" name="email" id="email" required>
-            </div>
-
-            <div>
-                <label for="phone_number">Phone</label>
-                <input type="number" name="phone_number" id="phone_number" required>
-            </div>
-
-            <div>
-                <label for="password">password</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-
-            <div>
-                <label for="ConfPass">confirm password</label>
-                <input type="password" name="ConfPass" id="ConfPass" required>
-            </div>
-
-            <button>Register</button>
-            <a href="/login">Already have an account, Login</a>
-        </form>
+        
+        
     </body>
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(event){
             event.preventDefault();
     
-            const successDiv = document.getElementById('successDiv');
-            const failDiv = document.getElementById('failDiv');
+            const statusDiv = document.getElementById('statusDiv');
 
             const formData = new FormData(this);
 
@@ -71,7 +136,7 @@
             const confirmPass = formData.get('ConfPass');
     
             if (password !== confirmPass) {
-                failDiv.innerText = 'Passwords do not match. Please confirm your password.';
+                statusDiv.innerText = 'Passwords do not match. Please confirm your password.';
                 return;
             }else{
                 try {
@@ -88,7 +153,7 @@
                         window.location.href = '/login';
                     } else {
                         const errorData = await response.json();
-                        failDiv.innerHTML = errorData.error;
+                        statusDiv.innerHTML = errorData.error;
                     }
                 } catch (error) {
                    console.log("An error ocurred: ", error);

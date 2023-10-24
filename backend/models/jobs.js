@@ -51,6 +51,10 @@ const Jobs = sequelize.define('Jobs', {
             key: 'user_id' 
         }
     },
+    directRequests:{
+        type:DataTypes.INTEGER,
+        allowNull:true
+    },
 },{
     timestamps: false
 });

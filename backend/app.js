@@ -39,6 +39,14 @@ app.use('/styles', express.static(path.join(__dirname, 'public', 'styles'), {
     }
 }));
 
+app.use('/images', express.static(path.join(__dirname, 'public', 'images'), {
+    setHeaders: (res, path, stat) => {
+        if (path.endsWith('.png')) {
+            res.setHeader('Content-Type', 'image/png');
+        }
+    }
+}));
+
 
 
 app.get('/', (req, res) => {
@@ -64,11 +72,15 @@ app.get('/profile', authenticateMiddleware,(req, res)=>{
 app.get('/jobs', authenticateMiddleware,(req, res)=>{
     res.render('main/jobs/jobs.ejs');
 });
-
 app.get('/postJob', authenticateMiddleware,(req,res)=>{
     res.render('main/jobs/postjob.ejs');
 });
+app.get(`/applyJob`, authenticateMiddleware, (req,res)=>{
+    res.render('main/jobs/Application.ejs');
+})
 
+
+//server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is listening on: http://localhost:${port}`);

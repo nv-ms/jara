@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara</title>
+    <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
 </head>
 <body>
     Post your job here
@@ -17,7 +18,7 @@
         <form id="uploadJobForm" method="post">
             <div class="job-title">
                 <label for="job_title">Title</label>
-                <input name="job_title" id="job_title" type="text" required></input>
+                <input name="job_title" id="job_title" type="text" required autocomplete="off"/>
             </div>
                 <div class="job_type">
                     <label for="selectedJobType">Choose the job type:</label>
@@ -32,28 +33,35 @@
                 
                 <div class="short_job-description">
                     <label for="short_job_description">Short Description</label>
-                    <input name="short_job_description" id="short_job_description" type="text" required></input>
+                    <input name="short_job_description" id="short_job_description" type="text" required autocomplete="off"/>
                 </div>
                 <div class="job-description">
                     <label for="job_description">Detailed Job Description</label>
-                    <input name="job_description" id="job_description" type="text"></input>
+                    <input name="job_description" id="job_description" type="text" autocomplete="off"/>
                 </div>
                 <div class="job-location">
                     <label for="job_location">Location</label>
-                    <input type="text" name="job_location" id="job_location">
+                    <input type="text" name="job_location" id="job_location" autocomplete="off">
                 </div>
                 <div class="job-requirements">
                     <label for="job_requirements">Job Requirements</label>
-                    <input name="job_requirements" id="job_requirements" type="text" required></input>
+                    <input name="job_requirements" id="job_requirements" type="text" required autocomplete="off"/>
                 </div>
                 <div class="min-salary">
                     <label for="min_salary">Minumum Salary</label>
-                    <input name="min_salary" id="min_salary" type="number" required></input>
+                    <input name="min_salary" id="min_salary" type="number" required autocomplete="off"/>
                 </div>
                 <div class="max-salary">
                     <label for="max_salary">Max Salary</label>
-                    <input name="max_salary" id="max_salary" type="number"></input>
+                    <input name="max_salary" id="max_salary" type="number" autocomplete="off"/>
                 </div>
+                <div class="directRequest">
+                    <label for="directRequest">Do you want to be directly contacted?</label>
+                    <select id="directRequest" name="directRequest">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>                
                 <button type="submit" id="submitButton">Upload</button>
             </form>
         </div>
@@ -65,6 +73,7 @@
             const successDiv = document.getElementById('successDiv');
             const failDiv = document.getElementById('failDiv');
             const selectedJobElement = document.getElementById('selectedJobType');
+            const directRequest = document.getElementById('directRequest');
 
             const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
 
@@ -79,6 +88,7 @@
             const max_salary = formData.get('max_salary');
             const job_requirements = formData.get('job_requirements');
             const employer_id = userCookie ? userCookie.split('=')[1] : null;
+            const directRequests = parseInt(directRequest.value);
 
             try {
                 const response = await fetch('/api/jobs/create', {
@@ -86,13 +96,13 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ job_title, job_type, short_job_description, job_description ,job_location, job_requirements, min_salary, max_salary, employer_id })
+                    body: JSON.stringify({ job_title, job_type, short_job_description, job_description ,job_location, job_requirements, min_salary, max_salary, employer_id, directRequests})
                 });
 
                 if (response.ok) {
                     successDiv.innerText = "Job Successfully Created";
-                    window.location.href = '/home';
-                    window.location('/home');
+                    //window.location.href = '/home';
+                    //window.location('/home');
                 } else {
                     failDiv.innerText = "Job creation failed, please try again";
                 }
