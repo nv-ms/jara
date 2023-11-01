@@ -12,7 +12,6 @@
             box-sizing: border-box;
             color: black;
         }
-       
         .head{
             width: 100%;
             position: fixed;
@@ -60,6 +59,7 @@
             transition: .5s;
         }
         .searchBar{
+            margin-top:-4% ;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -82,6 +82,11 @@
             font-size: 20px;
             border-radius: 20px;
             width: 100px;
+        }
+        .submit:hover{
+            background-color: rgba(0, 0, 0, 0.521);
+            transition: .5s;
+            cursor: pointer;
         }
         
 
@@ -139,8 +144,8 @@
 
         .content {
             width: 100%;
-            margin-top: 150px;
-            padding: 5pz;
+            margin-top: 100px;
+            padding: 5px;
         }
         
 
@@ -301,7 +306,6 @@
             max-width: 100%;
         }
 
-        /* Add CSS styles for pagination */
         .pagination {
             text-align: center;
             margin-top: 20px;
@@ -349,6 +353,7 @@
         <div class="header">
             <img class="logo" src="../public/images/logowhite.png" alt="logo" width="75px" height="75px">
             <div class="links">
+                <a class="link" href="#">Gigs</a>
                 <a class="link" href="/home">Home</a>
                 <a class="link" href="/postJob">Post a Job</a>
                 <a class="link" href="/profile">My Profile</a>
@@ -417,12 +422,25 @@
     </main>
 
     <footer class="footer">
-        <a href = "/home" class="copyright">© 2023 Nams</a>
-        <a href = "#" class="Nams">Powered by NVMS softwares</a>
+        <div class="fastnavButtons" id="backNav">
+            <button id="startIndexButton">&lt;&lt</button>
+            <button id="previousIndexButton">&lt</button>
+        </div>
+
+        <div class="navButtons" id="navButtons"></div>
+
+        <div class="fatsnavButtons" id="fowardNav">
+            <button id="nextIndexButton">></button>
+            <button id="endIndexButton">&gt;&gt</button>
+        </div>
+
+        <div class="footlinks">
+            <a href = "/home" class="copyright">© 2023 Nams</a>
+            <a href = "#" class="Nams">Powered by NVMS softwares</a>
+        </div>
     </footer>
 
     <script>
-
         const openJ = (jobId) => {
             const url = `/jobs?asfdight/tyu/23/4r/typ-oup.i_oid=${encodeURIComponent(jobId)}`;
             window.location.href = url;
@@ -433,6 +451,8 @@
         const spinner = document.getElementsByClassName("spinner")[0];
         const jobPanel = document.getElementsByClassName("createJob")[0];
         const submitButton = document.getElementById('submitButton');
+        let totalJobs;
+        let jobsToDisplay = 10;
 
         // Filter divs
         const mainFilter = document.getElementById('mainFilter');
@@ -448,8 +468,7 @@
         const toggleFilter = (filterElement) => {
             const filters = [salaryFilter, dateFilter, categoryFilter, mainFilter];
             filters.forEach((filter) => {
-                filter.style.display = filter === filterElement && window.getComputedStyle(filter).display !== "block"
-                ? "block": "none";
+                filter.style.display = filter === filterElement && window.getComputedStyle(filter).display !== "block"? "block": "none";
             });
         };
 
@@ -474,13 +493,71 @@
             }
         };
 
-        async function fetchAndDisplayJobs() {
+        async function fetchAndDisplayJobs(startIndex, endIndex) {
             spinner.style.display = "block";
             try {
-                const response = await fetch('/api/jobs/fetchJobs')
-                if (response.ok) {
+                const response = await fetch(`/api/jobs/fetchJobs/${startIndex}/${endIndex}`);
+                if (response.ok) {                    
                     const responseData = await response.json();
-                    const jobs = responseData.job;
+
+                    const navButtons = document.getElementById('navButtons');
+                    navButtons.innerHTML = ""
+                    const totalJobs = responseData.totalJobs;
+                    const pageIndex = Math.ceil(endIndex/jobsToDisplay);
+
+                    const totalButtons = Math.ceil((totalJobs - jobsToDisplay) / jobsToDisplay);
+                    for(i = 1; i < totalButtons; i++){
+                        const pageButton = document.createElement('button');
+                        pageButton.classList.add('pageButton');
+                        
+                        pageButton.textContent = i;
+                        const newstartIndex =  i * 10;
+                        const newEndIndex = (newstartIndex + jobsToDisplay)-1;
+
+                        pageButton.addEventListener('click',function(){
+                            fetchAndDisplayJobs(newstartIndex,newEndIndex);
+                        });
+                        navButtons.appendChild(pageButton);                        
+                    }
+                    
+                    const startIndexButton = document.getElementById('startIndexButton');
+                    const previousIndexButton = document.getElementById('previousIndexButton');
+                    const nextIndexButton = document.getElementById('nextIndexButton');
+                    const endIndexButton = document.getElementById('endIndexButton');
+                    if (pageIndex < 2) {
+                        previousIndexButton.style.display = 'none';
+                        startIndexButton.style.display = 'none';
+                    }else if(pageIndex == 2){
+                        previousIndexButton.style.display = 'block';
+                        startIndexButton.style.display = 'none';
+                    }else if(pageIndex >= 3){
+                        previousIndexButton.style.display = 'block';
+                        startIndexButton.style.display = 'block'
+                    }
+
+                    startIndexButton.addEventListener('click', function () {
+                        const newstartIndex = 0;
+                        const newEndIndex = jobsToDisplay - 1;
+                        fetchAndDisplayJobs(newstartIndex, newEndIndex);
+                    });
+                    previousIndexButton.addEventListener('click', function(){
+                        const newStartIndex = startIndex - jobsToDisplay;
+                        const newEndIndex = endIndex - jobsToDisplay;
+                        fetchAndDisplayJobs(newStartIndex, newEndIndex);
+                    });
+                    nextIndexButton.addEventListener('click', function(){
+                        const newStartIndex = endIndex+1;
+                        const newEndIndex = newStartIndex + jobsToDisplay-1;
+                        console.log(newStartIndex, newEndIndex);
+                        fetchAndDisplayJobs(newStartIndex, newEndIndex);
+                    });
+                    endIndexButton.addEventListener('click', function(){
+                        const newendIndex = totalButtons * jobsToDisplay - 1;
+                        const newStartIndex = newendIndex - jobsToDisplay + 1;
+                        fetchAndDisplayJobs(newStartIndex, newendIndex);
+                    });
+
+                    const jobs = responseData.jobs;
                     const jobListContainer = document.getElementById('jobList');
                     jobListContainer.innerHTML = '';
 
@@ -505,9 +582,9 @@
                         salaryPara.classList.add('salary-range');
                         if (job.max_salary === null || job.max_salary == 0) {
                             salaryPara.textContent = `kes ${job.min_salary}`;
-                            } else {
-                                salaryPara.textContent = `kes ${job.min_salary} - ${job.max_salary}`;
-                            }   
+                        } else {
+                            salaryPara.textContent = (job.min_salary < job.max_salary)?`kes ${job.min_salary} - ${job.max_salary}`:`kes ${job.max_salary} - ${job.min_salary}`;
+                        }   
 
                         const descriptionPara = document.createElement('p');
                         descriptionPara.classList.add('jobDescription');
@@ -524,7 +601,6 @@
                         jobDiv.onclick = function() {
                             openJ(jobDiv.id);
                         };
-
                         jobDiv.appendChild(TypePara);
                         jobDiv.appendChild(salaryPara);
                         jobDiv.appendChild(titleHeader);
@@ -559,6 +635,7 @@
                 const jobListContainer = document.getElementById('jobList');
 
                 const response = await fetch(url);
+                let maxJobsToDisplay = 5;
 
                 if (response.ok) {
                     const responseData = await response.json();
@@ -610,22 +687,25 @@
                         jobDiv.onclick = function() {
                             openJ(jobDiv.id);
                         };
-
-                        jobDiv.appendChild(TypePara);
-                        jobDiv.appendChild(salaryPara);
-                        jobDiv.appendChild(titleHeader);
-                        jobDiv.appendChild(descriptionPara);
-                        jobDiv.appendChild(locationPara);
-                        jobDiv.appendChild(postedDatePara);
-                        jobDiv.id = `${job.job_id}`;
-                        jobListContainer.appendChild(jobDiv);
+                            jobDiv.appendChild(TypePara);
+                            jobDiv.appendChild(salaryPara);
+                            jobDiv.appendChild(titleHeader);
+                            jobDiv.appendChild(descriptionPara);
+                            jobDiv.appendChild(locationPara);
+                            jobDiv.appendChild(postedDatePara);
+                            jobDiv.id = `${job.job_id}`;
+                            jobListContainer.appendChild(jobDiv);
                         });
+                        if (jobs.length > maxJobsToDisplay) {
+                            return;
+                        }
                     }
-                } else if(response.notfound){
+                } else if(!(response.ok)){
+                    jobListContainer.textContent = " ";
                     const noResultsPara = document.createElement('p');
-                    noResultsPara.textContent = 'No jobs found matching the search criteria.';
+                    noResultsPara.classList.add('noJobs');
+                    noResultsPara.textContent = 'No jobs found matching the search criteria.Meanwhile you can exploe other options below...';
                     jobListContainer.appendChild(noResultsPara);
-                    console.error('Failed to fetch search results');
                 }
             } catch (error) {
                 console.error('Fetch error:', error);
@@ -636,7 +716,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             window.history.replaceState({}, document.title, "/home");
-            fetchAndDisplayJobs();
+            fetchAndDisplayJobs(0,9);
         });
     </script>
 </body>

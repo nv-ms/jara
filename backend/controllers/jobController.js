@@ -82,17 +82,25 @@ const jobController = {
             res.status(500).json({ error: 'An error occurred while deleting the job',error });
         }
     },
-    getjobList:async(req, res)=>{
+    getJobList:async (req, res) => {
         try {
-            const job = await Job.findAll();
-            if(!job){
-                res.status(404).json({error:"No jobs found"});
+            const startJobIndex = parseInt(req.params.startJobIndex);
+            const endJobIndex = parseInt(req.params.endJobIndex);
+    
+            const jobs = await Job.findAll();
+    
+            if (!jobs || jobs.length === 0) {
+                return res.status(404).json({ error: "No jobs found" });
             }
-            res.status(200).json({job});
+            const selectedJobs = jobs.slice(startJobIndex, endJobIndex + 1);
+            if (selectedJobs.length === 0) {
+                return res.status(400).json({ error: "No jobs within the specified index range" });
+            }
+            return res.status(200).json({ jobs: selectedJobs, totalJobs: jobs.length });
         } catch (error) {
-            res.status(500).json({error:"An error ocurred while fetching jobs", error});
+            return res.status(500).json({ error: "An error occurred while fetching jobs", details: error.message });
         }
-    },   
+    },
     getJobDetails:async(req, res)=>{
         try {
             const job_id = req.params.job_id;
@@ -122,7 +130,7 @@ const jobController = {
             });
     
             if (jobResults.length === 0) {
-                return res.status(404).json({error:"No job was found matching that criteria"});
+                return res.status(300).json({error:"No job was found matching that criteria"});
             }
     
             res.status(200).json({ jobs: jobResults });

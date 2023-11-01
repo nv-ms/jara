@@ -69,6 +69,30 @@ const reviewsController = {
             console.log(error);
         }
     },
+    getAllReviewsForJob: async (req, res) => {
+        const job_id = req.params.job_id;
+        try {
+            const reviews = await reviewsModel.findAll({ where: { job_id } });
+            if (!reviews || reviews.length === 0) {
+                return res.status(404).json({ error: "No reviews found for this job" });
+            }
+            return res.status(200).json({ reviews });
+        } catch (error) {
+            return res.status(500).json({message:"An error occurred while fetching reviews"});
+        }
+    },
+    getAllReviewsForUser: async (req, res) => {
+        const userId = req.params.userId;
+        try {
+            const reviews = await reviewsModel.findAll({ where: { userId } });
+            if (!reviews || reviews.length === 0) {
+                return res.status(404).json({ error: "No reviews found for this user" });
+            }
+            return res.status(200).json({ reviews });
+        } catch (error) {
+            return res.status(500).json({ error: "An error occurred while fetching reviews", error });
+        }
+    },    
     getAllReviews:async(req, res)=>{
         try {
             const reviews = await reviewsModel.findAll();

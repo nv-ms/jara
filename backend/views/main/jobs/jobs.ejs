@@ -6,195 +6,270 @@
     <title>Jobs </title>
     <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
     <style>
-        * {
+       * {
             margin: 0px;
             font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            color: #333;
             box-sizing: border-box;
+            color: black;
         }
-        .headNav{
-            background-color: #c9c9c9;
-            overflow: hidden;
-            color: #207eaa;
-            margin:0;
-            z-index: 10;
+        body{
+            background-color: #cce5ff;
         }
-        .job-descriptionDetails{
-            margin:10px;
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows:.2fr 1fr 1fr .5fr ;
-            gap:5px;
+       
+        .head{
+            width: 100%;
+            position: fixed;
+            display: flex;
+            top: 0;
             padding: 10px;
-            box-sizing: border-box;
+            margin-top: -10px;
+            background-color: #007bff;
+            flex-direction: column;
+            z-index: 2;
         }
-
-        .jobdet-header {
-            grid-column-start: 1;
-            grid-column-end:4;
-            grid-row-start: 1;
-            background-color: #bebebe;
-            border-radius: 20px;
-            padding: 10px;
+       
+        .header{
+            width: 100%;
+            background-color: #007bff;
+            display: flex;
+            justify-content: start;
+            height: 100px;
+            color: white;
         }
-        .jobdet-header h1{
+        .logo{
+            position: fixed;
+            z-index: 1;
+            padding: 20px;
+        }
+        .links{
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
             text-align: center;
-            text-decoration: underline;
+            font-size: 17px;
         }
-        .backbtn{
+        .link{
+            background-color: #008100;
+            color: white;
+            margin: 5px;
+            width: 100px;
+            height: 40px;
+            padding: 10px;
+            text-decoration: none;
+            
+            border-radius: 5px;
+        }
+        .link:hover{
+            background-color: #00000065;
+            transition: .5s;
+        }
+        .searchBar{
+            margin-top:-4% ;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .keyword{
             border: none;
-            border-radius: 10px;
+            text-align: center;
+            height: 30px;
+            width: 300px;
+            font-size: 15px;
+            margin: 5px;
+            border-radius: 20px;
+        }
+        .submit{
+            margin: 5px;
+            height: 30px;
+            border: none;
+            background-color: #ff5e00;
+            color: white;
             font-size: 20px;
-            background-color: #00295f;
-            color: #bebebe;
-        }
-        .job-Details-description{
-            background-color: #f1f1f1;
-            grid-column-start: 1;
-            grid-column-end: 3;
-            grid-row-start: 2;
-            grid-row-end: 4;
-            padding:10px;
             border-radius: 20px;
+            width: 100px;
         }
 
-        .jobdet-div{
-            padding:10px;
-            margin-left: 10%;
+        /* Spinner*/
+        .spinner{
+            display:none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .loader {
+            top: 50%;
+            left: 50%;
+            font-size: 10px;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            position: fixed;
+            text-indent: -9999em;
+            animation: mulShdSpin .7s infinite ease;
+            transform: translateZ(0);
+            z-index: 2000;
+        }
+        @keyframes mulShdSpin {
+            0%,
+            100% {
+                box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.5), -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
+            }
+            12.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
+            }
+            25% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.5), 1.8em -1.8em 0 0em rgba(255,255,255, 0.7), 2.5em 0em 0 0em #ffffff, 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            37.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.5), 2.5em 0em 0 0em rgba(255,255,255, 0.7), 1.75em 1.75em 0 0em #ffffff, 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            50% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.5), 1.75em 1.75em 0 0em rgba(255,255,255, 0.7), 0em 2.5em 0 0em #ffffff, -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            62.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.5), 0em 2.5em 0 0em rgba(255,255,255, 0.7), -1.8em 1.8em 0 0em #ffffff, -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            75% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.5), -1.8em 1.8em 0 0em rgba(255,255,255, 0.7), -2.6em 0em 0 0em #ffffff, -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            87.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.5), -2.6em 0em 0 0em rgba(255,255,255, 0.7), -1.8em -1.8em 0 0em #ffffff;
+            }
         }
 
-        .jobdet-div .jobdet-title{
-            font-weight: bolder;
-            text-decoration: underline;
-            font-size: 2rem;
-            color: #0058ca;
-        }
-        .jobdet-div .jobdet-cat{
-            font-weight: bold;
-        }
-        .jobdet-div .jobdet-salary{
-            font-size: 30px;
-        }
-
-        .jobdet-div .jobdet-s-description{
-            font-size: larger;
-        }
-        .jobdet-div .jobdet-description{
-            margin-top: 5%; 
-        }
-        
-        .jobdet-div .jobdet-postdate{
-            font-size: 20px;
-        }
-        
-        .empdet-title{
-            margin-top: 10px;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-        .jobdet-apply{
-            grid-row-start: 2;
-            grid-column-start: 3;
-            grid-column-end: 3;
-            grid-row-end: 2;
-            border-radius: 20px;
-            padding: 20px;
-            background-color: #ebebeb;
-        }
-        .job-Reviews{
-            grid-row-start: 3;
-            grid-row-end: 3;
-            grid-column-start: 3;
-            background-color: #ebebeb;
-            padding: 20px;
-            border-radius: 20px;
-        } 
-
-        .jobdet-footer{
-            grid-column-start: 1;
-            grid-column-end: 4;
-            background-color: #bebebe;
-            border-radius: 20px;
-            padding:10px;
-            display: flex;
-            flex-direction: row;
-        }
-        .otherJobs{
-            background-color: #333;
-            color: #bebebe;
-            flex:1;
-            justify-content: space-evenly;
-            margin: 10px;
-            border-radius: 20px;
-            padding: 10px;
-        }
-
-        .job-descriptionDetails{
-            width: 100vw;
-            height: 100vh;
+        .content {
+            width: 100%;
+            margin-top: 120px;
+            padding: 5px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows:.2fr 1fr .5fr .3fr ;
-            gap:5px;
-            box-sizing: border-box;
-            margin:5px;
+            grid-template-columns: 70% 30%;
+            gap: 10px;
+            color: #112A46;
         }
-        
-        .jobdet-header {
-            grid-column-start: 1;
-            grid-column-end:4;
-            grid-row-start: 1;
-            grid-row-end:2;
-            background-color: #bebebe;
-            border-radius: 20px;
+        .titleH{
+            text-align: center;
+        }
+        .jobs{
+            margin-left: 5%;
             padding: 10px;
+            grid-column: 1;
+            background-color: #ACC8E5;
+            border-radius: 10px;
+            
         }
-        .job-Details-description{
-            background-color: #bebebe;
-            grid-column-start: 1;
-            grid-column-end: 4;
-            grid-row-start: 2;
-            grid-row-end: 2;
-            padding:10px;
-            border-radius: 20px;
-        }
-        
-        .jobdet-apply{
-            grid-row-start: 3;
-            grid-row-end: 4;
-            grid-column-start: 1;
-            grid-column-end: 4;
-            border-radius: 20px;
-            padding: 20px;
-            background-color: #bebebe;
-        }
-        .job-Reviews{
-            grid-row-start: 4;
-            grid-row-end: 4;
-            grid-column-start: 1;
-            grid-column-end: 4;
-            border-radius: 20px;
-            padding: 20px;
-            background-color: #bebebe;
-        }
-        
-        
-        .jobdet-footer{
+        .misc{
+            width: 100%;
+            padding: 5px;
             display: flex;
-        }
-        .otherJobs{
-            background-color: #333;
-            color: #bebebe;
-            flex:1;
-            justify-content: space-evenly;
-            margin: 10px;
+            flex-direction: column;
+            align-items: center;
+            background-color: #d1f8ff;
             border-radius: 10px;
         }
-
-
+        .apply{
+            width: 100%;
+            margin: 5px;
+        }
+        .applyjob{
+            background-color: #ff5e00;
+            color: white;
+            border: none;
+            width: 150px;
+            height: 40px;
+            border-radius: 100px;
+            text-align: center;
+            font-size: 25px;
+            margin: 10px;
+        }
+        .savejob{
+            background-color: #002383;
+            color: white;
+            border: none;
+            width: 150px;
+            height: 40px;
+            border-radius: 100px;
+            text-align: center;
+            font-size: 25px;
+            margin: 10px;
+        }
+        .applyjob:hover{
+            background-color: #001429c5;
+            transition: .3s;
+        }
+        .savejob:hover{
+            background-color: steelblue;
+            transition: .3s;
+        }
+        .jobReviews{
+            align-self: flex-start;
+            width: 100%;
+            padding: 10px;
+            margin: 5px;
+            display: flex;
+        }
+        .reviews-form{
+            margin: 10px;
+        }
+        .reviewsDiv{
+            display: flex;
+            width: 100%;
+        }
+        .review{
+            margin: 5px;
+        }
+       
+        .user{
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 10px;
+            font-style: italic;
+            position: relative;
+        }
         
+        .seeMore{
+            align-self: flex-end;
+            text-align: center;
+            text-decoration: none;
+            font-size: 10px;
+            font-style: italic;
+        }
+        .seeMore:hover{
+            font-style: normal;
+            text-decoration: underline;
+            font-size: 12px;
+        }
+        
+        .aside{
+            border-radius: 10px;
+            background-color: #ACC8E5;
+            margin-right: 10%;
+            grid-row: auto;
+            height: 80vh;
+        }
+        .suggestedJobs{
+            margin: 5px;
+        }
+        .titleHeader{
+            text-align: center;
+            font-size: 20px;
+        }
+        .job-div{
+            background-color: #e3e8ee;
+            margin: 5px;
+            padding: 5px;
+        }
+
+
+        @media screen and (max-width: 700px) {
+            body{
+                background-color: #00295f;
+            }
+        }
 
     </style>
 </head>
@@ -202,36 +277,46 @@
     <div class="spinner">
         <div class="loader"></div>
     </div>
-    <main class="job-desc" id="jobdDesc">
-        <div class="job-descriptionDetails" id="jobdetailsDescription">
-            <div class="jobdet-header">
-                <button type="button" id="backButton" class="backbtn" onclick="history.back();return false;">Back</button>
-                <h1>Job Description</h1>
+    <div class="head">
+        <div class="header">
+            <img class="logo" src="../public/images/logowhite.png" alt="logo" width="75px" height="75px">
+            <div class="links">
+                <a class="link" href="/home">Home</a>
+                <a class="link" href="/postJob">Post a Job</a>
+                <a class="link" href="/profile">My Profile</a>
             </div>
-            
-            <div class="job-Details-description" id="jobDescriptionDetails"></div>
+        </div>
+        <div class="search">
+            <form id="searchForm" class="searchBar" method="post">
+                <input type="search" name="keyword" class="keyword" id="keyword" placeholder="Search . . ." required autocomplete="off">
+                <button type="submit" class="submit" id="searchBtn">Search</button>
+            </form>
+        </div>
+    </div>
+    <main class="content">
+        <h1 class="titleH">Job Description</h1>
+        <div class="jobs">
+            <div class="jobDescription" id="jobDescription"></div>
 
-            <div class="jobdet-apply">
-                <button type="button" id="applyjobbtn" class="applyjob-btn" onclick="">Apply</button>
-                <button type="button" id="savejobbtn" class="savejob-btn">Save</button>
-            </div>
-
-            <div id="jobReviews" class="job-Reviews">
-                <form id="uploadReviewForm" class="reviews-form" method="post">
-                    <input name="message" type="text" placeholder="Add a review . . ."><br>
-                    <input name="ratings" type="text" placeholder="Don't forget to leave a rating"><br>
-                    <button type="submit" class="submit-review">Post</button>
-                </form>
-                <div id="reviewsDiv" class="reviews-div">
-                    <div class="sucessDiv" id="successDiv"></div>
-                    <div class="failDiv" id="failDiv"></div>
+            <div class="misc">
+                <div class="apply">
+                    <button type="button" id="applyJob" class="applyjob" onclick="">Apply</button>
+                    <button type="button" id="saveJob" class="savejob">Save</button>
                 </div>
+                <div id="jobReviews" class="jobReviews">
+                    <div class="statusDiv"></div>
+                    <form id="uploadReviewForm" class="reviews-form" method="post">
+                        <input class="reviewsInput" name="ratings" type="text" placeholder="Don't forget to leave a rating" autocomplete="off" required><br>
+                        <input class="reviewsInput" name="message" type="text" placeholder="Add a review . . ." autocomplete="off"><br>
+                        <button type="submit" class="submit-review">Post</button>
+                    </form>
+                    <div class="reviewsDiv" id="reviewsDiv"></div>
+                </div>
+                
             </div>
-            <div class="jobdet-footer">
-                <div class="otherJobs">Plumber</div>
-                <div class="otherJobs">Carpenter</div>
-                <div class="otherJobs">Mason</div>
-            </div>
+        </div>
+        <div class="aside">
+            <div class="suggestedJobs" id="suggestedDiv"></div>
         </div>
     </main>
     <script>
@@ -242,32 +327,29 @@
         const urlParams = new URLSearchParams(window.location.search);
         const jobId = urlParams.get('asfdight/tyu/23/4r/typ-oup.i_oid');
 
-        //const postReviewsBtn = document.getElementById('SubmitReview')
 
         async function displayJobDetails(jobId){
             spinner.style.display = "block";
             try{          
                 const response = await fetch(`/api/jobs/${jobId}/details`);
                 if(response.ok){
-                    const jobDetailsContainer = document.getElementById('jobDescriptionDetails');
-                    jobDetailsContainer.innerHTML = '';
+                    const jobDiv = document.getElementById('jobDescription');
+                    jobDiv.innerHTML = '';
+
                     const resData = await response.json();
                     const jobs = resData.job;
                     const emp_id = jobs.employer_id;
 
-                    const jobDiv = document.createElement('div');
-                    jobDiv.classList.add('jobdet-div');
-
                     const titleHeader = document.createElement('div');
-                    titleHeader.classList.add('jobdet-title');
+                    titleHeader.classList.add('jobTitle');
                     titleHeader.textContent = jobs.job_title;
 
                     const Job_type = document.createElement('div');
-                    Job_type.classList.add('jobdet-type');
+                    Job_type.classList.add('jobType');
                     Job_type.textContent = jobs.job_type;
                         
                     const salaryPara = document.createElement('div');
-                    salaryPara.classList.add('salary-range');
+                    salaryPara.classList.add('salaryRange');
                     if (jobs.max_salary === null || jobs.max_salary == 0) {
                         salaryPara.textContent = `kes ${jobs.min_salary}`;
                     } else {
@@ -275,26 +357,26 @@
                     }
                     
                     const shortDescPara = document.createElement('div');
-                    shortDescPara.classList.add('jobdet-s-description');
+                    shortDescPara.classList.add('shortDescription');
                     shortDescPara.textContent = jobs.short_job_description;
 
                     const descriptionPara = document.createElement('div');
-                    descriptionPara.classList.add('jobdet-description');
+                    descriptionPara.classList.add('detailedDescription');
                     descriptionPara.textContent = jobs.job_description;
 
                     const locationPara = document.createElement('div');
-                    locationPara.classList.add('jobdet-location');
+                    locationPara.classList.add('jobLocation');
                     locationPara.textContent = `Location: ${jobs.job_location}`;
 
                     const postedDatePara = document.createElement('div');
-                    postedDatePara.classList.add('jobdet-posdate');
+                    postedDatePara.classList.add('postedDate');
                     postedDatePara.textContent = `Posted Date: ${jobs.posted_date}`;
 
                     const empDetails = document.createElement('div');
-                    empDetails.classList.add('jobdet-emp')
+                    empDetails.classList.add('employer')
 
                     const empdet_title = document.createElement('p');
-                    empdet_title.classList.add('empdet-title');
+                    empdet_title.classList.add('employer');
                     empdet_title.textContent = 'Employer Details';
                     
                     empDetails.appendChild(empdet_title);
@@ -307,14 +389,14 @@
                                 const _employer = await employer.json();
                                 
                                 const empDetails = document.createElement('div');
-                                empDetails.classList.add('emp-Details');
+                                empDetails.classList.add('employerDetails');
 
                                 const empName = document.createElement('p');
-                                empName.classList.add('jobdet_empname');
+                                empName.classList.add('employerNAme');
                                 empName.textContent = `Name: ${_employer.first_name}`;
 
                                 const empuName = document.createElement('p');
-                                empuName.classList.add('jobdet_empUname');
+                                empuName.classList.add('employerDetails');
                                 empuName.textContent = `username: ${_employer.username}`;
 
                                 empDetails.appendChild(empName);
@@ -341,7 +423,6 @@
                     jobDiv.appendChild(empDetails);
                     empDetails.id = 'employer_details';
 
-                    jobDetailsContainer.appendChild(jobDiv);
                     fetchEmployer();
                     spinner.style.display = "none";
                     
@@ -351,98 +432,215 @@
             }
         }
 
-        async function fetchReviews(){
+        async function fetchReviews(jobId){
             try {
-                const response = await fetch(`/api/reviews/GetReviews`);
+                const response = await fetch(`/api/reviews/${jobId}/jobReview`);
+                const reviewsContainer = document.getElementById('reviewsDiv');
+                reviewsContainer.innerHTML = " ";
                 if(response.ok){
-                    const reviewsContainer = document.getElementById('reviewsDiv');
-                    reviewsContainer.innerText = '';
                     const reviewsData = await response.json();
                     const reviews = reviewsData.reviews;
-                    const userId = reviews.user_id;
+                    let reviewsCount;
                     
-                    reviews.forEach((reviews)=>{
+                    const maxReviewsToShow = 5;
+
+                    for (let i = 0; i < reviews.length && i < maxReviewsToShow; i++) {
+                        const review = reviews[i];
                         const reviewDescDiv = document.createElement('div');
-                        reviewDescDiv.classList.add('reviewDescDiv');
+                        reviewDescDiv.classList.add('review');
 
                         const messagePara = document.createElement('div');
                         messagePara.classList.add('message');
-                        messagePara.textContent = reviews.message;
 
-                        const ratingsPara = document.createElement('div');
-                        ratingsPara.classList.add('ratings');
-                        ratingsPara.textContent = reviews.rating
+                        const maxLength = 10;
 
-                        const userDiv = document.createElement('div');
-                        
-                        async function getUsername(userId){
-                            try{
-                                const response = await fetch(`api/users/${userId}/profile`);
-                                if(response.ok){
-                                    const userData = response.users;
-
-                                    userPara = document.createElement('div');
-                                    userPara.classList.add('Creator');
-                                    userPara.textContent = userData.username;
-
-                                    userDiv.appendChild(userPara);
-                                }
-                            }catch(error){
-                                console.log("an error ocurred while fetching user details for reviews");
-                            }
+                        if (review.message.length > maxLength) {
+                            const truncatedText = review.message.substring(0, maxLength) + '...';
+                            messagePara.textContent = truncatedText;
+                        } else {
+                            messagePara.textContent = review.message;
                         }
 
-                        getUsername(userId);
+                        const ratingsPara = document.createElement('div');
+                        ratingsPara.classList.add('rating');
 
+                        const ratingValue = review.rating.length; 
+                        const starIcons = '\u2605'.repeat(ratingValue);
+                        ratingsPara.textContent = starIcons;
+
+                        const userId = review.user_id;
+                        const userDiv = document.createElement('a');
+                        userDiv.classList.add('user');
+
+                        try {
+                            const response = await fetch(`api/users/${userId}/profile`);
+                            if (response.ok) {
+                                const data = await response.json();
+                                userDiv.textContent = data.username;
+                            }
+                        } catch (error) {
+                            console.log("An error occurred while fetching user details for reviews");
+                        }
+
+                        reviewDescDiv.appendChild(userDiv);
                         reviewDescDiv.appendChild(messagePara);
                         reviewDescDiv.appendChild(ratingsPara);
-                        reviewDescDiv.appendChild(userDiv);
-
                         reviewsContainer.appendChild(reviewDescDiv);
+                    }
 
-                    });
-
+                    if (reviews.length > maxReviewsToShow) {
+                        const seeMoreLink = document.createElement('a');
+                        seeMoreLink.classList.add('seeMore');
+                        seeMoreLink.textContent = `Show more (${reviews.length-maxReviewsToShow})`;
+                        seeMoreLink.href = '#';
+                        seeMoreLink.addEventListener('click', (event) => {
+                            event.preventDefault();
+                        });
+                        reviewsContainer.appendChild(seeMoreLink);
+                    }
+                }else if(!response.ok){
+                    const reviewStatus = document.createElement('a');
+                    reviewStatus.classList.add('reviewStatus');
+                    reviewStatus.textContent = "Be the first to post a review here"
+                    
+                    reviewsContainer.appendChild(reviewStatus);
                 }
             } catch (error) {
                 console.error("An error ocured while fetching reviews details", error);
             }
         }
 
-        async function submitReviews(){
-            const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
-            const formData = new FormData(this);
-
-            const user_id = userCookie ? userCookie.split('=')[1] : null;
-            const job_id = jobId;
-            const message = formData.get('reviews');
-            const ratings = formData.get('ratings');
-
+        async function getRecommendedJobs() {
+            spinner.style.display = "block";
             try {
-                const response = await fetch('/api/reviews/create',{
-                    method:'post',
-                    headers:{
-                        'Content-Type':'application/json'
-                    },
-                    body: JSON.stringify({user_id, job_id, message, ratings})
-                });
+                const response = await fetch(`/api/jobs/${jobId}/details`);
 
-                if(response.ok){
-                    console.log("Sucesssfuly updated");
+                if (!response.ok) {
+                    console.log("Something went wrong while fetching job details.");
+                    return [];
                 }
 
+                const currentResponse = await response.json();
+                const currentJob = currentResponse.job;
+
+                const allJobsResponse = await fetch('/api/jobs/fetchJobs');
+                if (!allJobsResponse.ok) {
+                    console.log("Something went wrong while fetching all jobs.");
+                    return [];
+                }
+
+                const suggestedDiv = document.getElementById('suggestedDiv');
+                suggestedDiv.textContent = "";
+
+                const allJobsData = await allJobsResponse.json();
+                const jobs = allJobsData.job;
+
+                const maxJobs = 3;
+
+                const filteredJobs = jobs.filter(job => {
+                    return (
+                        job.job_id !== currentJob.job_id &&
+                        (job.job_title === currentJob.job_title ||
+                        job.job_type === currentJob.job_type ||
+                        job.job_location === currentJob.job_location)
+                    );
+                });
+
+
+                if (filteredJobs.length === 0) {
+                    const noResultsPara = document.createElement('p');
+                    noResultsPara.textContent = 'No recommended jobs found.';
+                    suggestedDiv.appendChild(noResultsPara);
+                } else {
+                    const titleHeader = document.createElement('h2');
+                    titleHeader.classList.add('titleHeader');
+                    titleHeader.textContent = "Some Recommended Jobs For You";
+                    suggestedDiv.appendChild(titleHeader);
+
+                    for (let i = 0; i < filteredJobs.length && i < maxJobs; i++) {
+                        const job = filteredJobs[i];
+
+                        const jobDiv = document.createElement('div');
+                        jobDiv.classList.add('job-div');
+
+                        const TypePara = document.createElement('h3');
+                        TypePara.classList.add('job-type');
+                        TypePara.textContent = job.job_type;
+
+                        const titleHeader = document.createElement('h2');
+                        titleHeader.classList.add('job-title');
+                        titleHeader.textContent = job.job_title;
+
+                        
+
+                        const descriptionPara = document.createElement('p');
+                        descriptionPara.classList.add('jobDescription');
+
+                        const maxLength = 50;
+                        if (job.short_job_description.length > maxLength) {
+                            const truncatedText = job.short_job_description.substring(0, maxLength) + '...';
+                            descriptionPara.textContent = truncatedText;
+                        } else {
+                            descriptionPara.textContent = job.short_job_description;
+                        }
+
+                        const salaryPara = document.createElement('p');
+                        salaryPara.classList.add('salary-range');
+                        if (job.max_salary === null || job.max_salary == 0) {
+                            salaryPara.textContent = `kes ${job.min_salary}`;
+                        } else {
+                            salaryPara.textContent = `kes ${job.min_salary} - ${job.max_salary}`;
+                        }  
+
+                        const locationPara = document.createElement('p');
+                        locationPara.classList.add('job-location');
+                        locationPara.textContent = `${job.job_location}`;
+
+                        const postedDatePara = document.createElement('div');
+                        postedDatePara.classList.add('job-posted-date');
+                        postedDatePara.textContent = `Posted Date: ${job.posted_date}`;
+
+                        jobDiv.onclick = function() {
+                            openJ(jobDiv.id);
+                        };
+
+                        jobDiv.appendChild(TypePara);
+                        jobDiv.appendChild(salaryPara);
+                        jobDiv.appendChild(titleHeader);
+                        jobDiv.appendChild(descriptionPara);
+                        jobDiv.appendChild(locationPara);
+                        jobDiv.appendChild(postedDatePara);
+                        jobDiv.id = `${job.job_id}`;
+                        suggestedDiv.appendChild(jobDiv);
+                    };
+                    if (filteredJobs.length > maxJobs) {
+                        const seeMoreLink = document.createElement('a');
+                        seeMoreLink.classList.add('seeMore');
+                        seeMoreLink.textContent = `Show more (${filteredJobs.length-maxJobs})`;
+                        seeMoreLink.href = '#';
+                        seeMoreLink.addEventListener('click', (event) => {
+                            event.preventDefault();
+                        });
+                        suggestedDiv.appendChild(seeMoreLink);
+                    }
+                }
             } catch (error) {
-                console.log("an error ocurred while posting reviews details");
+                console.log("An error occurred:", error);
+                return [];
+            } finally {
+                spinner.style.display = "none";
             }
+        }
+
+        const openJ = (jobId) => {
+            const url = `/jobs?asfdight/tyu/23/4r/typ-oup.i_oid=${encodeURIComponent(jobId)}`;
+            window.location.href = url;
         }
 
         document.getElementById('uploadReviewForm').addEventListener('submit', async function(event){
             event.preventDefault();
-
-            const successDiv = document.getElementById('successDiv');
-            const failDiv = document.getElementById('failDiv');
-
+            const statusDiv = document.getElementById("statusDiv")
             const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
-
             const formData = new FormData(this);
 
             const user_id = userCookie ? userCookie.split('=')[1] : null;
@@ -461,10 +659,10 @@
                 });
 
                 if (response.ok) {
-                    successDiv.innerText = "Job Successfully Created";
+                    statusDiv.innerText = "Job Successfully Created";
                     window.location.href = '/jobs';
                 } else {
-                    failDiv.innerText = "review creation failed, please try again";
+                    statusDiv.innerText = "review creation failed, please try again";
                 }
             } catch (error) {
                 console.log("An error occurred: ", error);
@@ -473,7 +671,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             displayJobDetails(jobId);
-            fetchReviews();
+            getRecommendedJobs()
+            fetchReviews(jobId);
         });
     </script>
 </body>
