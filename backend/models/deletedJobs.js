@@ -17,19 +17,23 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
         type:DataTypes.STRING,
         allowNull:false
     },
-    short_job_description:{
+    job_category:{
         type:DataTypes.STRING,
         allowNull:false
     },
-    job_description:{
-        type: DataTypes.STRING,
+    specialization:{
+        type:DataTypes.STRING,
         allowNull: true
     },
     job_location:{
         type: DataTypes.STRING,
         allowNull: false
     },
-    job_requirements:{
+    min_qualification:{
+        type: DataTypes.STRING,
+        allowNull:true
+    },
+    min_experience: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -41,9 +45,17 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
         type:DataTypes.STRING,
         allowNull:true
     },
+    dead_line:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     posted_date:{
         type: DataTypes.DATE,
         allowNull: false
+    },
+    job_description: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     deleted_date:{
         type: DataTypes.DATE,
@@ -56,8 +68,13 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
             model: users, 
             key: 'user_id' 
         }
-    }    
-},{
+    },
+    directRequests:{
+        type:DataTypes.INTEGER,
+        allowNull:true
+    }, 
+},
+{
     timestamps:false
 });
 

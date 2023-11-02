@@ -9,7 +9,7 @@ const { json } = require('sequelize');
 const jobController = {
     createJob: async (req, res) => {
         try {
-            const {job_title, job_type,short_job_description, job_description, job_location, job_requirements, min_salary, max_salary ,employer_id, directRequests } = req.body;
+            const {job_title, job_type, job_category, specialization,job_location, min_qualification, min_experience, min_salary, max_salary ,dead_line,job_description,employer_id, directRequests } = req.body;
 
             const foundEmployer = await User.findOne({ where: { user_id: employer_id } });
             if (!foundEmployer) {
@@ -32,12 +32,15 @@ const jobController = {
                 job_id : uniqueID,
                 job_title,
                 job_type,
-                short_job_description,
-                job_description,
+                job_category,
+                specialization,
                 job_location,
-                job_requirements,
+                min_qualification,
+                min_experience,
                 min_salary,
                 max_salary,
+                dead_line,
+                job_description,
                 posted_date: currentDate,
                 employer_id,
                 directRequests
@@ -62,12 +65,15 @@ const jobController = {
                 job_id: job.job_id,
                 job_title: job.job_title,
                 job_type: job.job_type,
-                short_job_description: job.short_job_description,
-                job_description: job.job_description,
+                job_category: job.job_category,
+                specialization: job.specialization,
                 job_location: job.job_location,
-                job_requirements: job.job_requirements,
+                min_qualification: job.min_qualification,
+                min_experience: job.min_experience,
                 min_salary: job.min_salary,
                 max_salary: job.max_salary,
+                dead_line: job.dead_line,
+                job_description: job.job_description,
                 posted_date: job.posted_date,
                 deleted_date: new Date().toISOString().split('T')[0],
                 employer_id: job.employer_id,
@@ -75,8 +81,6 @@ const jobController = {
             });
             await job.destroy();
             res.status(200).json({ message: 'Job archived successfully', archivedJob });
-    
-            
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'An error occurred while deleting the job',error });
@@ -119,6 +123,9 @@ const jobController = {
     searchJobs: async (req, res) => {
         try {
             const { keyword } = req.params;
+            const startIndex = parseInt(req.params.startIndex);
+            const endIndex = parseInt(req.params.endIndex);
+
             const jobResults = await Job.findAll({
                 where: {
                     [Op.or]: [
@@ -128,12 +135,14 @@ const jobController = {
                     ],
                 },
             });
-    
             if (jobResults.length === 0) {
                 return res.status(300).json({error:"No job was found matching that criteria"});
             }
-    
-            res.status(200).json({ jobs: jobResults });
+            const selectedJobs = jobResults.slice(startIndex, endIndex + 1);
+            if (selectedJobs.length === 0) {
+                return res.status(400).json({ error: "No jobs within the specified index range" });
+            }
+            return res.status(200).json({ jobs: selectedJobs, totalJobs: jobResults.length });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'An error occurred while searching for jobs.'});

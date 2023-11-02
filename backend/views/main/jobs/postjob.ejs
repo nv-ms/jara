@@ -5,108 +5,458 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jara</title>
     <link rel="shortcut icon" href='../public/images/logo.png' type="image/x-icon">
+
+    <style>
+        *{
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-align: center;
+        }
+        .spinner{
+            display:none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .loader {
+            top: 50%;
+            left: 50%;
+            font-size: 10px;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            position: fixed;
+            text-indent: -9999em;
+            animation: mulShdSpin .7s infinite ease;
+            transform: translateZ(0);
+            z-index: 2000;
+        }
+        @keyframes mulShdSpin {
+            0%,
+            100% {
+                box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.5), -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
+            }
+            12.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
+            }
+            25% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.5), 1.8em -1.8em 0 0em rgba(255,255,255, 0.7), 2.5em 0em 0 0em #ffffff, 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            37.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.5), 2.5em 0em 0 0em rgba(255,255,255, 0.7), 1.75em 1.75em 0 0em #ffffff, 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            50% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.5), 1.75em 1.75em 0 0em rgba(255,255,255, 0.7), 0em 2.5em 0 0em #ffffff, -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            62.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.5), 0em 2.5em 0 0em rgba(255,255,255, 0.7), -1.8em 1.8em 0 0em #ffffff, -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            75% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.5), -1.8em 1.8em 0 0em rgba(255,255,255, 0.7), -2.6em 0em 0 0em #ffffff, -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
+            }
+            87.5% {
+                box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.2), 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.5), -2.6em 0em 0 0em rgba(255,255,255, 0.7), -1.8em -1.8em 0 0em #ffffff;
+            }
+        }
+       
+       
+        .header{
+
+            width: 100%;
+            position: fixed;
+            display: flex;
+            top: 0;
+            padding: 10px;
+            margin-top: -10px;
+            background-color: #007bff;
+            flex-direction: column;
+            z-index: 2;
+            width: 100%;
+            justify-content: space-between;
+            height: 75px;
+            color: white;
+        }
+        .logo{
+            position: fixed;
+            z-index: 1;
+            padding: 20px;
+        }
+        .links{
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            font-size: 17px;
+        }
+        .link{
+            background-color: #008100;
+            color: white;
+            margin: 5px;
+            margin-right: 20px;
+            width: 100px;
+            height: 30px;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .link:hover{
+            background-color: #00000065;
+            transition: .5s;
+        }
+        .Content{
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+        .postTitle{
+            text-align: center;
+        }
+        .uploadForm{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            margin-left: 25%;
+        }
+        .jobSpecialization{
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+           
+        }
+        .specialization{
+            width: 100%;
+            height: 30px;
+            text-align: left;
+            font-size: 15px;
+        }
+        .sDesc{
+            overflow: auto;
+            width: 69%;
+            height: 50px;
+            text-align: left;
+            padding: 5px;
+            resize: none;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+       
+        
+        option{
+            text-align: left;
+            font-size: 15px;
+        }
+       
+        .salary{
+            display: flex;
+            width: 70%;
+            justify-content: center;
+            text-align: center;
+        }
+        .maxSal{
+            width: 300px;
+        }
+        
+        .submitBtn{
+            margin: 5px;
+            width: 40%;
+            height: 50px;
+            border-radius: 5px;
+            outline: none;
+            border: none;
+            color: #ffffff;
+            background-color: #007bff;
+            font-size: 20px;
+        }
+        .submitBtn:hover{
+            transition: .3s;
+            background-color: #007bff31;
+            border-radius: 5px;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+        select{
+            width: 70%;
+            height: 50px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        input{
+            width: 69%;
+            padding: 5px;
+            height: 50px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+       .deadlinePicker{
+        width: 100%;
+       }
+
+        .footer{
+            position: sticky;
+            background-color: #007bff;
+            bottom: 0;
+            width: 100%;
+            height: 5vh;
+        }
+    </style>
 </head>
 <body>
-    Post your job here
-    <div class="spinner">
+   
+    <div class="spinner" id="spinner">
         <div class="loader"></div>
     </div>
-    <div class="createJob" >
-        <div id="successDiv"></div>
-        <div id="failDiv"></div>
-        <a href="/home">Back</a>
-        <form id="uploadJobForm" method="post">
-            <div class="job-title">
-                <label for="job_title">Title</label>
-                <input name="job_title" id="job_title" type="text" required autocomplete="off"/>
+    <div class="header">
+        <img class="logo" src="../public/images/logowhite.png" alt="logo" width="50px" height="50px">
+            <div class="links">
+                <a class="link" href="/home">Home</a>
+                <a class="link" href="/profile">My Profile</a>
             </div>
-                <div class="job_type">
-                    <label for="selectedJobType">Choose the job type:</label>
-                        <select id="selectedJobType" name="selectedJobType">
-                            <option value="Full-Time">Full-Time</option>
-                            <option value="Part-Time">Part-Time</option>
-                            <option value="Contract">Contract</option>
-                            <option value="Internship">Internship</option>
-                            <option value="Voluntary">Voluntary</option>
-                        </select>
-                </div>
-                
-                <div class="short_job-description">
-                    <label for="short_job_description">Short Description</label>
-                    <input name="short_job_description" id="short_job_description" type="text" required autocomplete="off"/>
-                </div>
-                <div class="job-description">
-                    <label for="job_description">Detailed Job Description</label>
-                    <input name="job_description" id="job_description" type="text" autocomplete="off"/>
-                </div>
-                <div class="job-location">
-                    <label for="job_location">Location</label>
-                    <input type="text" name="job_location" id="job_location" autocomplete="off">
-                </div>
-                <div class="job-requirements">
-                    <label for="job_requirements">Job Requirements</label>
-                    <input name="job_requirements" id="job_requirements" type="text" required autocomplete="off"/>
-                </div>
-                <div class="min-salary">
-                    <label for="min_salary">Minumum Salary</label>
+    </div>
+    <div class="Content" >
+        <h1 class="postTitle">Post your job here</h1>
+        <div class="statusDiv" id="statusDiv"></div>
+        <form id="uploadJobForm" class="uploadForm" method="post">
+            <label for="job_title">Title *</label>
+            <input class="jobTitle" name="job_title" id="job_title" type="text" required autocomplete="off"/>
+
+            <label for="selectedJobType">Choose the job type: *</label>
+            <select class="jobType" id="selectedJobType" name="selectedJobType">
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+                <option value="Voluntary">Voluntary</option>
+            </select>
+
+            <label for="jobCategory">Job Category *</label>
+            <select class="jobCategory" name="jobCategory" id="jobCategory" class="jobCategory">
+                <option value="">Select Category</option>
+                <option value="Professional Services">Professional Services</option>
+                <option value="skilled">Skilled Services</option>
+                <option value="manual">Manual Labor</option>
+            </select>
+            <div id="jobSpecialization" class="jobSpecialization" style="display: none;">
+                <label for="specialization">Area of Specialization *</label>
+                <select class="specialization" name="specialization" id="specialization">
+                    <option value="" >Select Specialization</option>
+                    <option value="Information Technology and Software Development">Information Technology and Software Development</option>
+                    <option value="HealthCare and Medicine">HealthCare and Medicine</option>
+                    <option value="Education and Teaching">Education and Teaching</option>
+                    <option value="Business and Finance">Business and Finance</option>
+                    <option value="Sales and Marketing">Sales and Marketing</option>
+                    <option value="Arts and Creative Services">Arts and Creative Services</option>
+                    <option value="Engineering and Architecture">Engineering and Architecture</option>
+                    <option value="Customer Service and Support">Customer Service and Support</option>
+                    <option value="Admininstrative and Clerical">Administrative and Clerical</option>
+                    <option value="Manufacturing and Production">Manufacturing and Production</option>
+                    <option value="Research and Development">Research and Development</option>
+                    <option value="Legal and Compliance">Legal and Compliance</option>
+                    <option value="Design and Multimedia">Design and Multimedia</option>
+                    <option value="Hospitality and Tourism">Hospitality and Tourism</option>
+                    <option value="Construction and Trade">Construction and Trade</option>
+                    <option value="Retail and Sales">Retail and Sales</option>
+                    <option value="Human Resource">Human Resource</option>
+                    <option value="Social Services and Non Profit">Social Services and Non Profit</option>
+                    <option value="Agriculture and Farming">Agriculture and Farming</option>
+                    <option value="Transportation and Logistics">Transportation and Logistics</option>
+                    <option value="Science and Technology">Science and Technology</option>
+                    <option value="Media and Communications">Media and Communications</option>
+                    <option value="Government and Public Administration">Government and Public Administration</option>
+                    <option value="Environment and Green Jobs">Environment and Green Jobs</option>
+                    <option value="Freelance and Self Employed">Freelance and Self Employed</option>
+                </select>
+            </div>
+
+            <label for="job_location">Location *</label>
+            <select class="jobLocation" placeholder="State County Name" name="job-location" id="jobLocation">
+                <option value="Mombasa">Mombasa</option>
+                <option value="Kwale">Kwale</option>
+                <option value="Kilifi">Kilifi</option>
+                <option value="Tana River">Tana River</option>
+                <option value="Lamu">Lamu</option>
+                <option value="Taita-Taveta">Taita Taveta</option>
+                <option value="Garissa">Garissa</option>
+                <option value="Wajir">Wajir</option>
+                <option value="Mandera">Mandera</option>
+                <option value="Marsabit">Marsabit</option>
+                <option value="Isiolo">Isiolo</option>
+                <option value="Meru">Meru</option>
+                <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                <option value="Embu">Embu</option>
+                <option value="Kitui">Kitui</option>
+                <option value="MAchakos">Machakos</option>
+                <option value="Makueni">Makueni</option>
+                <option value="Nyandarua">Nyandarua</option>
+                <option value="Nyeri">Nyeri</option>
+                <option value="Kirinyaga">Kirinyaga</option>
+                <option value="Murang'a">Murang'a</option>
+                <option value="Kiambu">Kiambu</option>
+                <option value="Turkana">Turkana</option>
+                <option value="West Pokot">west Pokot</option>
+                <option value="Samburu">Samburu</option>
+                <option value="Trans Nzoia">Trans Nzoia</option>
+                <option value="Uasin Gishu">Uasin Gishu</option>
+                <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                <option value="Nandi">Nandi</option>
+                <option value="Baringo">Baringo</option>
+                <option value="Laikipia">Laikipia</option>
+                <option value="Nakuru">Nakuru</option>
+                <option value="Narok">Narok</option>
+                <option value="Kajiado">Kajiado</option>
+                <option value="Kericho">Kericho</option>
+                <option value="Bomet">Bomet</option>
+                <option value="Kaakamega">Kakamega</option>
+                <option value="Vihiga">Vihiga</option>
+                <option value="Bungoma">Bungoma</option>
+                <option value="Busia">Busia</option>
+                <option value="Siaya">Siaya</option>
+                <option value="Kisumu">Kisumu</option>
+                <option value="Homa Bay">Homa Bay</option>
+                <option value="Migori">Migori</option>
+                <option value="Kisii">Kisii</option>
+                <option value="Nyamira">Nyamira</option>
+                <option value="Nairobi">Nairobi</option>
+            </select>
+
+            <label for="minQualification">Job Requirements</label>
+            <select name="minQualification" id="minQualification">
+                <option value="0">Minimum Qualification</option>
+                <option value="KCPE Certificate">KCPE</option>
+                <option value="KCSE Certificate">KCSE</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Bachelors Degree">BSc/BA/HND</option>
+                <option value="Master's Degree">MBA/MBSc/Mc</option>
+                <option value="pHd">Doctorate/Fellowship</option>
+                <option value="Vocational Training Certificate">Vocational Training</option>
+                <option value="Professional">Professional Certifications</option>
+            </select>
+
+            <label for="minExperience">Minimum Experience</label>
+            <select name="minExperience" id="minExperience">
+                <option value="">Not Necessary</option>
+                <option value="1 Year">1 Year</option>
+                <option value="2 Years">2 Years</option>
+                <option value="3 Years">3 Years</option>
+                <option value="4 Years">4 Years</option>
+                <option value="5 Years">5 Years</option>
+                <option value="6 Years">6 Years</option>
+                <option value="7 Years">7 Years</option>
+                <option value="8 Years">8 Years</option>
+                <option value="9 Years">9 Years</option>
+                <option value="10 Years plus">10 Years plus</option>                
+            </select>
+
+            <div class="salary">
+                <div class="minSal">
+                    <label for="min_salary">Minumum Salary *</label>
                     <input name="min_salary" id="min_salary" type="number" required autocomplete="off"/>
                 </div>
-                <div class="max-salary">
-                    <label for="max_salary">Max Salary</label>
+                <div class="maxSal">
+                    <label for="max_salary">Max Salary</label><br>
                     <input name="max_salary" id="max_salary" type="number" autocomplete="off"/>
                 </div>
-                <div class="directRequest">
-                    <label for="directRequest">Do you want to be directly contacted?</label>
-                    <select id="directRequest" name="directRequest">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>                
-                <button type="submit" id="submitButton">Upload</button>
-            </form>
-        </div>
+            </div>
+
+            <label for="deadLine">Is there a Deadline?</label>
+            <select class="deadline" name="deadLine" id="deadline">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+            <div id="deadlinePickerDiv" class="deadlinePicker" style="display: none;">
+                <label for="deadlinePicker">Choose a DeadLine</label><br>
+                <input name="deadLinePicker" id="deadlinePicker" type="date">
+            </div>
+
+            <label for="directRequest">Do you want to be directly contacted?</label>
+            <select id="directRequest" name="directRequest">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+            <label for="job_description">Brief Description</label>
+            <textarea class="sDesc" name="job_description" id="job_description" type="text" required autocomplete="off"></textarea>
+
+            <button type="submit" class="submitBtn" id="submitButton">Upload</button>
+        </form>
+    </div>
+    <div class="footer"></div>
     <script>
+        const jobCategorySelect = document.getElementById("jobCategory");
+        const specialization = document.getElementById("jobSpecialization");
+        jobCategorySelect.addEventListener("change", function () {
+            if (jobCategorySelect.value === "Professional Services") {
+                specialization.style.display = "block";
+            } else {
+                specialization.style.display = "none";
+            }
+        });
+        const deadline = document.getElementById('deadline');
+        const deadlinePicker = document.getElementById('deadlinePickerDiv');
+        deadline.addEventListener('change', function (){
+            if(deadline.value == 'Yes'){
+                deadlinePicker.style.display = "block";
+            }else if(deadline.value == "No"){
+                deadlinePicker.style.display = 'none';
+                
+            }
+        })
 
         document.getElementById('uploadJobForm').addEventListener('submit', async function(event){
             event.preventDefault();
 
-            const successDiv = document.getElementById('successDiv');
-            const failDiv = document.getElementById('failDiv');
-            const selectedJobElement = document.getElementById('selectedJobType');
-            const directRequest = document.getElementById('directRequest');
+            const statusDiv = document.getElementById('statusDiv');
+            
+            const spinner = document.getElementById('spinner');
+            spinner.style.display = 'block';
 
             const userCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('user_id='));
 
             const formData = new FormData(this);
 
             const job_title = formData.get('job_title');
-            const job_type = selectedJobElement.value;
-            const short_job_description = formData.get('short_job_description')
-            const job_description = formData.get('job_description');
-            const job_location = formData.get('job_location');
+            const job_type = document.getElementById('selectedJobType').value;
+            const job_category = document.getElementById('jobCategory').value;
+            const specialization = document.getElementById('specialization').value;
+            const job_location = document.getElementById('jobLocation').value;
+            const min_qualification = document.getElementById('minQualification').value;
+            const min_experience = document.getElementById('minExperience').value;
             const min_salary = formData.get('min_salary');
             const max_salary = formData.get('max_salary');
-            const job_requirements = formData.get('job_requirements');
+            const dead_line = document.getElementById('deadlinePicker').value;
+            const job_description = document.getElementById('job_description').value;
             const employer_id = userCookie ? userCookie.split('=')[1] : null;
-            const directRequests = parseInt(directRequest.value);
-
+            const directRequest = document.getElementById('directRequest').value;
+            console.log(job_title, job_type, job_category, specialization, job_location, min_qualification, min_experience, dead_line, min_salary, max_salary, job_description, employer_id, directRequest)
             try {
                 const response = await fetch('/api/jobs/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ job_title, job_type, short_job_description, job_description ,job_location, job_requirements, min_salary, max_salary, employer_id, directRequests})
+                    body: JSON.stringify({ job_title, job_type, job_category, specialization, job_location, min_qualification, min_experience, dead_line, min_salary, max_salary, job_description, employer_id, directRequest})
                 });
 
                 if (response.ok) {
-                    successDiv.innerText = "Job Successfully Created";
+                    spinner.style.display = 'none';
+                    statusDiv.style.color = 'green';
+                    statusDiv.innerText = "Job Successfully Created";
                     //window.location.href = '/home';
                     //window.location('/home');
                 } else {
-                    failDiv.innerText = "Job creation failed, please try again";
+                    spinner.style.display = 'none';
+                    statusDiv.style.color = 'red';
+                    statusDiv.innerText = "Job creation failed, please try again";
                 }
             } catch (error) {
+                spinner.style.display = 'none';
+                statusDiv.style.color = 'red';
+                statusDiv.innerText = "Job creation failed, please try again";
                 console.log("An error occurred: ", error);
             }
         });

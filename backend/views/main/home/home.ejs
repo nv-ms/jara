@@ -224,12 +224,13 @@
             padding:10px 16px;
             background-color: rgb(240, 240, 240);
             border-bottom: 1px solid rgb(243, 243, 243);
+            box-shadow: 2.5px 2.5px 5px rgba(31, 31, 31, 0.2);
             border-radius: 5px;
         }
 
         .job-div:hover{
             box-shadow: 5px 15px 25px rgba(0, 0, 0, 0.2);
-            background-color: rgb(223, 223, 223);
+            background-color: rgb(228, 228, 228);
             cursor: pointer;
             transition: .25s;
             scroll-behavior:smooth;
@@ -303,37 +304,54 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
         .footer{
-            max-width: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
         }
-
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
+       
+        .navButtons{
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
-
-        .pagination button {
+        .pageButton{
             background-color: #007bff;
-            color: #fff;
+            border-radius: 5px;
+            color: white;
             border: none;
             padding: 5px 10px;
             margin: 0 5px;
             cursor: pointer;
         }
-
-        .pagination button.current-page {
-            background-color: #ff9900;
+        .pageButton:hover{
+            transition: .3s;
+            border-radius: 5px;
+            background-color: white;
+            outline: 1px solid #007bff;
+            color: #007bff;
         }
-        .Nams{
-            float: right;
+        .currentPage {
+            background-color: #ff5e00;
+            color: white;
+            outline: none;
+            border-radius: 5px;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
         }
-        .copyright{
-            text-decoration: none;
-            margin-left: 5px;
-            text-align: center;
+        .currentPage:hover{
+            transition: .3s;
+            border-radius: 5px;
+            background-color: white;
+            outline: 1px solid #ff5e00;
+            color: #ff5e00;
         }
-        .copyright:hover{
-            cursor:pointer;
+        .footlinks{
+            display: flex;
+            justify-content: space-between;
         }
+       
     @media (max-width:600px){
         .headNav .headnavH1{
             font-size: 25px;
@@ -422,18 +440,7 @@
     </main>
 
     <footer class="footer">
-        <div class="fastnavButtons" id="backNav">
-            <button id="startIndexButton">&lt;&lt</button>
-            <button id="previousIndexButton">&lt</button>
-        </div>
-
-        <div class="navButtons" id="navButtons"></div>
-
-        <div class="fatsnavButtons" id="fowardNav">
-            <button id="nextIndexButton">></button>
-            <button id="endIndexButton">&gt;&gt</button>
-        </div>
-
+        <div class="navButtons" id="navButtons"></div>          
         <div class="footlinks">
             <a href = "/home" class="copyright">© 2023 Nams</a>
             <a href = "#" class="Nams">Powered by NVMS softwares</a>
@@ -505,10 +512,30 @@
                     const totalJobs = responseData.totalJobs;
                     const pageIndex = Math.ceil(endIndex/jobsToDisplay);
 
+                    const startIndexButton = document.createElement('button');
+                    startIndexButton.classList.add('pageButton');
+                    startIndexButton.textContent = '<<';
+                    const endIndexButton = document.createElement('button');
+                    endIndexButton.classList.add('pageButton');
+                    endIndexButton.textContent = ">>";
+                    const previousIndexButton = document.createElement('button');
+                    previousIndexButton.classList.add('pageButton');
+                    previousIndexButton.textContent = "<";
+                    const nextIndexButton = document.createElement('button');
+                    nextIndexButton.classList.add('pageButton');
+                    nextIndexButton.textContent = ">";
+
+                    navButtons.appendChild(startIndexButton);
+                    navButtons.appendChild(previousIndexButton);
+
                     const totalButtons = Math.ceil((totalJobs - jobsToDisplay) / jobsToDisplay);
                     for(i = 1; i < totalButtons; i++){
                         const pageButton = document.createElement('button');
-                        pageButton.classList.add('pageButton');
+                        if(i == (pageIndex - 1)){
+                            pageButton.classList.add('currentPage');
+                        }else if(i != (pageIndex - 1)){
+                            pageButton.classList.add('pageButton');
+                        }
                         
                         pageButton.textContent = i;
                         const newstartIndex =  i * 10;
@@ -517,14 +544,13 @@
                         pageButton.addEventListener('click',function(){
                             fetchAndDisplayJobs(newstartIndex,newEndIndex);
                         });
+                        
                         navButtons.appendChild(pageButton);                        
                     }
+                    navButtons.appendChild(nextIndexButton);
+                    navButtons.appendChild(endIndexButton);
                     
-                    const startIndexButton = document.getElementById('startIndexButton');
-                    const previousIndexButton = document.getElementById('previousIndexButton');
-                    const nextIndexButton = document.getElementById('nextIndexButton');
-                    const endIndexButton = document.getElementById('endIndexButton');
-                    if (pageIndex < 2) {
+                    if (pageIndex == 1) {
                         previousIndexButton.style.display = 'none';
                         startIndexButton.style.display = 'none';
                     }else if(pageIndex == 2){
@@ -534,11 +560,22 @@
                         previousIndexButton.style.display = 'block';
                         startIndexButton.style.display = 'block'
                     }
+                    if(pageIndex == (totalButtons - 1)){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'block';
+                    }else if(pageIndex == totalButtons){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'none';
+                    }if(totalButtons == 0){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'none';
+                    }
 
                     startIndexButton.addEventListener('click', function () {
                         const newstartIndex = 0;
                         const newEndIndex = jobsToDisplay - 1;
-                        fetchAndDisplayJobs(newstartIndex, newEndIndex);
+                        //fetchAndDisplayJobs(newstartIndex, newEndIndex);
+                        console.log(newstartIndex, newEndIndex)
                     });
                     previousIndexButton.addEventListener('click', function(){
                         const newStartIndex = startIndex - jobsToDisplay;
@@ -548,7 +585,6 @@
                     nextIndexButton.addEventListener('click', function(){
                         const newStartIndex = endIndex+1;
                         const newEndIndex = newStartIndex + jobsToDisplay-1;
-                        console.log(newStartIndex, newEndIndex);
                         fetchAndDisplayJobs(newStartIndex, newEndIndex);
                     });
                     endIndexButton.addEventListener('click', function(){
@@ -580,10 +616,10 @@
 
                         const salaryPara = document.createElement('p');
                         salaryPara.classList.add('salary-range');
-                        if (job.max_salary === null || job.max_salary == 0) {
+                        if (job.max_salary === null || job.max_salary == 0 || job.max_salary === job.min_salary) {
                             salaryPara.textContent = `kes ${job.min_salary}`;
                         } else {
-                            salaryPara.textContent = (job.min_salary < job.max_salary)?`kes ${job.min_salary} - ${job.max_salary}`:`kes ${job.max_salary} - ${job.min_salary}`;
+                            salaryPara.textContent = (job.min_salary <= job.max_salary)?`kes ${job.min_salary} - ${job.max_salary}`:`kes ${job.max_salary} - ${job.min_salary}`;
                         }   
 
                         const descriptionPara = document.createElement('p');
@@ -618,27 +654,111 @@
             }
             spinner.style.display = "none";
         }
-
-        //searching for job details
         document.getElementById('searchForm').addEventListener('submit', async function (event) {
             event.preventDefault();
-
             const formData = new FormData(this);
-
             const searchBtn = document.getElementById('searchBtn');
             const keyword = formData.get('keyword');
-            
+            searchJobs(keyword,0,9);
+        });
+        //searching for job details
+        const searchJobs = async (keyword, startIndex, endIndex) =>{
             spinner.style.display = "block";
-
             try {
-                let url = `/api/jobs/search/${encodeURIComponent(keyword)}`;
+                let url = `/api/jobs/search/${encodeURIComponent(keyword)}/${startIndex}/${endIndex}`;
                 const jobListContainer = document.getElementById('jobList');
 
                 const response = await fetch(url);
-                let maxJobsToDisplay = 5;
 
                 if (response.ok) {
+                    const sentKeyword = keyword;
                     const responseData = await response.json();
+                    const navButtons = document.getElementById('navButtons');
+                    navButtons.innerHTML = ""
+                    const totalJobs = responseData.totalJobs;
+                    const pageIndex = Math.ceil(endIndex/jobsToDisplay);
+
+                    const startIndexButton = document.createElement('button');
+                    startIndexButton.classList.add('pageButton');
+                    startIndexButton.textContent = '<<';
+                    const endIndexButton = document.createElement('button');
+                    endIndexButton.classList.add('pageButton');
+                    endIndexButton.textContent = ">>";
+                    const previousIndexButton = document.createElement('button');
+                    previousIndexButton.classList.add('pageButton');
+                    previousIndexButton.textContent = "<";
+                    const nextIndexButton = document.createElement('button');
+                    nextIndexButton.classList.add('pageButton');
+                    nextIndexButton.textContent = ">";
+
+                    navButtons.appendChild(startIndexButton);
+                    navButtons.appendChild(previousIndexButton);
+
+                    const totalButtons = Math.ceil((totalJobs - jobsToDisplay) / jobsToDisplay);
+
+                    for(i = 1; i < totalButtons; i++){
+                        const pageButton = document.createElement('button');
+                        if(i == (pageIndex - 1)){
+                            pageButton.classList.add('currentPage');
+                        }else if(i != (pageIndex - 1)){
+                            pageButton.classList.add('pageButton');
+                        }
+                        
+                        pageButton.textContent = i;
+                        const newstartIndex =  i * 10;
+                        const newEndIndex = (newstartIndex + jobsToDisplay)-1;
+
+                        pageButton.addEventListener('click',function(){
+                            searchJobs(sentKeyword,newstartIndex,newEndIndex);
+                        });
+                        
+                        navButtons.appendChild(pageButton);                        
+                    }
+                    navButtons.appendChild(nextIndexButton);
+                    navButtons.appendChild(endIndexButton);
+                    
+                    if (pageIndex == 1) {
+                        previousIndexButton.style.display = 'none';
+                        startIndexButton.style.display = 'none';
+                    }else if(pageIndex == 2){
+                        previousIndexButton.style.display = 'block';
+                        startIndexButton.style.display = 'none';
+                    }else if(pageIndex >= 3){
+                        previousIndexButton.style.display = 'block';
+                        startIndexButton.style.display = 'block'
+                    }
+                    if(pageIndex == (totalButtons - 1)){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'block';
+                    }else if(pageIndex == totalButtons){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'none';
+                    }
+                    if(totalButtons == 0){
+                        nextIndexButton.style.display = 'none';
+                        endIndexButton.style.display = 'none';
+                    }
+
+                    startIndexButton.addEventListener('click', function () {
+                        const newstartIndex = 0;
+                        const newEndIndex = jobsToDisplay - 1;
+                        searchJobs(sentKeyword,newstartIndex, newEndIndex);
+                    });
+                    previousIndexButton.addEventListener('click', function(){
+                        const newStartIndex = startIndex - jobsToDisplay;
+                        const newEndIndex = endIndex - jobsToDisplay;
+                        searchJobs(sentKeyword,newStartIndex, newEndIndex);
+                    });
+                    nextIndexButton.addEventListener('click', function(){
+                        const newStartIndex = endIndex+1;
+                        const newEndIndex = newStartIndex + jobsToDisplay-1;
+                        searchJobs(sentKeyword,newStartIndex, newEndIndex);
+                    });
+                    endIndexButton.addEventListener('click', function(){
+                        const newendIndex = totalButtons * jobsToDisplay - 1;
+                        const newStartIndex = newendIndex - jobsToDisplay + 1;
+                        searchJobs(sentKeyword,newStartIndex, newendIndex);
+                    });
                     const jobs = responseData.jobs;
 
                     jobListContainer.innerHTML = '';
@@ -696,9 +816,6 @@
                             jobDiv.id = `${job.job_id}`;
                             jobListContainer.appendChild(jobDiv);
                         });
-                        if (jobs.length > maxJobsToDisplay) {
-                            return;
-                        }
                     }
                 } else if(!(response.ok)){
                     jobListContainer.textContent = " ";
@@ -712,7 +829,7 @@
             } finally {
                 spinner.style.display = "none";
             }
-        });
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             window.history.replaceState({}, document.title, "/home");
