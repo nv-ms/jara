@@ -523,7 +523,7 @@
                 const currentResponse = await response.json();
                 const currentJob = currentResponse.job;
 
-                const allJobsResponse = await fetch('/api/jobs/fetchJobs');
+                const allJobsResponse = await fetch(`/api/jobs/fetchJobs/${0}/${10}`);
                 if (!allJobsResponse.ok) {
                     console.log("Something went wrong while fetching all jobs.");
                     return [];
