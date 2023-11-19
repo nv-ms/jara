@@ -1,0 +1,20 @@
+CREATE TABLE `jobs` (
+  `job_id` varchar(200) NOT NULL,
+  `job_title` varchar(200) NOT NULL,
+  `job_type` varchar(200) NOT NULL,
+  `job_category` varchar(200) NOT NULL,
+  `specialization` varchar(200) DEFAULT NULL,
+  `job_location` varchar(200) NOT NULL,
+  `min_qualification` varchar(200) DEFAULT NULL,
+  `min_experience` varchar(200) DEFAULT NULL,
+  `min_salary` varchar(200) NOT NULL,
+  `max_salary` varchar(200) DEFAULT NULL,
+  `dead_line` varchar(200) DEFAULT NULL,
+  `posted_date` date NOT NULL,
+  `job_description` varchar(1500) DEFAULT NULL,
+  `employer_id` varchar(200) NOT NULL,
+  `directRequests` int DEFAULT '0',
+  PRIMARY KEY (`job_id`),
+  KEY `useridfk_idx` (`employer_id`),
+  CONSTRAINT `useridfk` FOREIGN KEY (`employer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

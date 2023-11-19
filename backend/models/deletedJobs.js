@@ -64,10 +64,6 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
     employer_id: {
         type: DataTypes.STRING,
         allowNull: false,
-        references: {
-            model: users, 
-            key: 'user_id' 
-        }
     },
     directRequests:{
         type:DataTypes.INTEGER,
@@ -77,9 +73,5 @@ const deletedJobs = sequelize.define('deleted_Jobs',{
 {
     timestamps:false
 });
-
-deletedJobs.belongsTo(users,{foreignKey:'employer_id'});
-deletedJobs.belongsTo(jobs,{foreignKey:'job_id'});
-
 
 module.exports = deletedJobs;
