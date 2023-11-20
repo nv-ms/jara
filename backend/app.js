@@ -28,9 +28,6 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/reviews', reviewsRoutes);
 
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-//Route for serving CSS files from 'styles' folder
 app.use('/styles', express.static(path.join(__dirname, 'public', 'styles'), {
     setHeaders: (res, path, stat) => {
         if (path.endsWith('.css')) {
@@ -46,7 +43,6 @@ app.use('/images', express.static(path.join(__dirname, 'public', 'images'), {
         }
     }
 }));
-
 
 
 app.get('/', (req, res) => {
@@ -77,10 +73,11 @@ app.get('/postJob', authenticateMiddleware,(req,res)=>{
 });
 app.get(`/applyJob`, authenticateMiddleware, (req,res)=>{
     res.render('main/jobs/Application.ejs');
+});
+app.get('*',(req, res)=>{
+    res.render('index/404.ejs');
 })
 
-
-//server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is listening on: http://localhost:${port}`);
