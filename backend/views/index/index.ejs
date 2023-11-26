@@ -31,6 +31,31 @@
             color: white;
             border-radius: 5px;
         }
+        .footer{
+            background-color: #2B3940;
+            color :white;
+            padding: 10px;
+        }
+        .rowg-5{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .col{
+            margin: 5px;
+            padding: 5px;
+        }
+        .link-btn-white{
+            margin-left: 5px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .copyright{
+            width: 100%;
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -47,16 +72,16 @@
     </div>
     <div class="footer">
         <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Company</h5>
+            <div class="rowg-5">
+                <div class="col">
+                    <h5 class="text-white">Company</h5>
                     <a class="link-btn-white" href="">About Us</a>
                     <a class="link-btn-white" href="">Contact Us</a>
                     <a class="link-btn-white" href="">Our Services</a>
                     <a class="link-btn-white" href="">Privacy Policy</a>
-                    <a class="link-btn-white" href="">Terms & Condition</a>
+                    <a class="link-btn-white" href="">Terms & Conditions</a>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                 <div class="col">
                     <h5 class="text-white mb-4">Quick Links</h5>
                     <a class="link-btn-white" href="">About Us</a>
                     <a class="link-btn-white" href="">Contact Us</a>
@@ -64,7 +89,8 @@
                     <a class="link-btn-white" href="">Privacy Policy</a>
                     <a class="link-btn-white" href="">Terms & Condition</a>
                 </div>
-                <div class="col-lg-3 col-md-6">
+
+                <div class="col">
                     <h5 class="text-white mb-4">Contact</h5>
                     <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Kisii, Kenya</p>
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+254 726257338</p>
@@ -76,7 +102,7 @@
                         <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col">
                     <h5 class="text-white mb-4">Newsletter</h5>
                     <p>Please subscribe to our newsletter for the best updates around you.</p>
                     <div class="position-relative mx-auto" style="max-width: 400px;">
@@ -86,25 +112,24 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Jara</a>, All Rights Reserved. 
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
-                        </div>
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Jara</a>, All Rights Reserved. 
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="">Home</a>
+                        <a href="">Cookies</a>
+                        <a href="">Help</a>
+                        <a href="">FQAs</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
 </div>
     
 </body>
