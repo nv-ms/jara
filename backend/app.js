@@ -76,7 +76,7 @@ app.get(`/applyJob`, authenticateMiddleware, (req,res)=>{
 });
 app.get('*',(req, res)=>{
     res.render('index/404.ejs');
-});
+})
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
