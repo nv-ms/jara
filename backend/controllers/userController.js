@@ -17,7 +17,6 @@ const userController = {
                     ]
                 }
             });
-            
             if (existingUser) {
                 if (existingUser.email === email) {
                     return res.status(400).json({ error: 'An existing user with the provided email already exists' });
@@ -29,10 +28,8 @@ const userController = {
                     return res.status(400).json({ error: 'The selected username is not available, please choose another one' });
                 }
             };
-
             let uniqueID = uuidv4();
             let existsInuserTable = await userModel.findOne({ where: { user_id: uniqueID } });
-
             while (existsInuserTable) {
                 uniqueID = uuidv4();
                 existsInuserTable = await userModel.findOne({ where: { user_id: uniqueID } });
@@ -48,9 +45,7 @@ const userController = {
                 phone_number,
                 password_hash: hashedPassword
             });
-    
             const token = jwt.sign({ userId: newUser.user_id }, process.env.SECRET_KEY);
-            
             res.cookie('user_id', uniqueID);
             res.cookie('authtoken', token);
             res.status(201).json({ message:"Sucessful"});
@@ -62,24 +57,19 @@ const userController = {
     loginUser: async (req, res) => {
         try {
             const { email, password } = req.body;
-
             const user = await userModel.findOne({ where: { email } });
             if (!user) {
                 return res.status(404).json({ error: 'No user with such email exists in our system'});
             }
-
             const passwordMatch = await bcrypt.compare(password, user.password_hash);
             if (!passwordMatch) {
                 return res.status(401).json({ error: 'Wrong Password' });
             }
-
             const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY); 
             res.cookie('user_id', user.user_id);
             res.cookie('authtoken', token);
             res.status(200).json({ authToken: token });
-
         } catch (error) {
-            // Handle errors
             res.status(500).json({ error: 'An error occurred' });
             console.log(error);
         }
@@ -96,60 +86,47 @@ const userController = {
     getUserProfile: async (req, res) => {
         try {
             const userId = req.params.userId;
-
             const user = await userModel.findByPk(userId);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-
             res.status(200).json(user);
         } catch (error) {
             res.status(500).json({ error: 'An error occurred' });
             console.log(error);
         }
     },
-
     updateUserProfile: async (req, res) => {
         try {
             const userId = req.params.userId;
             const { username, first_name, last_name, email } = req.body;
-
             const user = await userModel.findByPk(userId);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-
             user.username = username || user.username;
             user.first_name = first_name || user.first_name;
             user.last_name = last_name || user.last_name;
             user.email = email || user.email;
             await user.save();
-
             res.status(200).json({ message: 'Profile updated successfully', user });
         } catch (error) {
-            // Handle errors
             res.status(500).json({ error: 'An error occurred while updating your details' });
             console.log(error);
         }
     },
-
     deleteUser: async (req, res) => {
         try {
             const user_id = req.params.user_id;
-
             const user = await userModel.findByPk(user_id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-
             await user.destroy();
-
             res.status(200).json({ message: 'User deleted successfully' });
         } catch (error) {
-            // Handle errors
             res.status(500).json({ error: 'An error occurred while deleting the user' });
         }
     }
 };
-
 module.exports = userController;
