@@ -5,7 +5,6 @@ const path = require('path');
 const authenticateMiddleware = require('./middlewares/authMiddleware');
 const cookieParser = require('cookie-parser');
 
-
 dotenv.config();
 const app = express();
 
@@ -43,7 +42,6 @@ app.use('/images', express.static(path.join(__dirname, 'public', 'images'), {
         }
     }
 }));
-
 
 app.get('/', (req, res) => {
     res.render('index/index.ejs');
